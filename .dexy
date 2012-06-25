@@ -1,7 +1,6 @@
 {
     "*.py|idio" : {},
     "*.sql|pyg" : {},
-    "*.sh|sh" : {},
     "*.sh|pyg" : {},
     "*.md|jinjajit|markdown|easyhtml" : { "allinputs" : true }
 }
