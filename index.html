@@ -273,8 +273,12 @@ Change widths as necessary
     <div id="content">
         <div class="g3">
 <h2>Overview</h2>
-<p>A web application serves the python script which drives our call interface, and the web application also exposes voting results, counts votes and stores the available options.</p>
-<p>Here is the SQL which creates the database tables we will use and populates the songs table:</p>
+<p>A web application serves the python script which drives our call interface, and
+the web application also exposes voting results, counts votes and stores the
+available options. The web application supports both the tropo web api and
+scripting interfaces.</p>
+<p>Here is the SQL which creates the database tables we will use and populates the
+songs table:</p>
 <div class="highlight"><pre><a name="data--schema.sql-pyg.html-1"></a><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">songs</span> <span class="p">(</span>
 <a name="data--schema.sql-pyg.html-2"></a>    <span class="nb">number</span> <span class="nb">INTEGER</span> <span class="k">PRIMARY</span> <span class="k">KEY</span><span class="p">,</span>
 <a name="data--schema.sql-pyg.html-3"></a>    <span class="n">title</span> <span class="nb">TEXT</span><span class="p">,</span>
@@ -297,10 +301,79 @@ Change widths as necessary
 <a name="data--schema.sql-pyg.html-20"></a>    <span class="n">song_number</span> <span class="nb">INTEGER</span><span class="p">,</span>
 <a name="data--schema.sql-pyg.html-21"></a>    <span class="n">phone_number</span> <span class="nb">TEXT</span>
 <a name="data--schema.sql-pyg.html-22"></a><span class="p">);</span>
+<a name="data--schema.sql-pyg.html-23"></a>
+<a name="data--schema.sql-pyg.html-24"></a><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">sessions</span> <span class="p">(</span>
+<a name="data--schema.sql-pyg.html-25"></a>    <span class="n">tropo_call_id</span> <span class="nb">TEXT</span><span class="p">,</span>
+<a name="data--schema.sql-pyg.html-26"></a>    <span class="n">caller_network</span> <span class="nb">TEXT</span><span class="p">,</span>
+<a name="data--schema.sql-pyg.html-27"></a>    <span class="n">caller_channel</span> <span class="nb">TEXT</span><span class="p">,</span>
+<a name="data--schema.sql-pyg.html-28"></a>    <span class="n">caller_id</span> <span class="nb">TEXT</span>
+<a name="data--schema.sql-pyg.html-29"></a><span class="p">);</span>
 </pre></div>
 
-<h2>Songs</h2>
-<p>We create a songs model which abstracts database interactions. Here we see a method which returns an array of song information:</p>
+<h2>Getting Started</h2>
+<h3>Scripting</h3>
+<p>Our web application exposes a static python file which contains the script that
+will be used by the scripting api. We point the tropo application to the url of
+this script file.</p>
+<p>http://voice.pitchlift.org/script.py</p>
+<h3>WebAPI</h3>
+<p>We define a starting URL which we point our tropo application to. This method
+will interact only minimally with the user (maybe saying "hello"), but its
+primary object is to direct the call to the appropriate handler. This might
+mean differentiating between text and voice, or directing based on the caller
+id or network, but even if it's just a simple redirect this is a nice option to
+avoid hard-coding the starting point into the tropo application specification.
+If you want to change your menu options you can simply change where this start
+method points to rather than having to change the url in the tropo console.</p>
+<div class="highlight"><pre><a name="app--voting_webapi.py-idio.html-132"></a><span class="k">class</span> <span class="nc">StartWebapiController</span><span class="p">(</span><span class="n">BaseWebapiController</span><span class="p">):</span>
+<a name="app--voting_webapi.py-idio.html-133"></a>    <span class="k">def</span> <span class="nf">do_voice</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a name="app--voting_webapi.py-idio.html-134"></a>        <span class="n">t</span> <span class="o">=</span> <span class="n">Tropo</span><span class="p">()</span>
+<a name="app--voting_webapi.py-idio.html-135"></a>
+<a name="app--voting_webapi.py-idio.html-136"></a>        <span class="n">caller_id</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">votes</span><span class="o">.</span><span class="n">caller_id_if_valid</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">call_id</span><span class="p">())</span>
+<a name="app--voting_webapi.py-idio.html-137"></a>        <span class="n">web</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;starting to handle voice call from </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">caller_id</span><span class="p">)</span>
+<a name="app--voting_webapi.py-idio.html-138"></a>
+<a name="app--voting_webapi.py-idio.html-139"></a>        <span class="k">if</span> <span class="n">models</span><span class="o">.</span><span class="n">votes</span><span class="o">.</span><span class="n">caller_id_can_vote</span><span class="p">(</span><span class="n">caller_id</span><span class="p">):</span>
+<a name="app--voting_webapi.py-idio.html-140"></a>            <span class="n">t</span><span class="o">.</span><span class="n">on</span><span class="p">(</span><span class="n">event</span><span class="o">=</span><span class="s">&quot;continue&quot;</span><span class="p">,</span> <span class="nb">next</span><span class="o">=</span><span class="s">&quot;/webapi/vote/menu&quot;</span><span class="p">)</span>
+<a name="app--voting_webapi.py-idio.html-141"></a>        <span class="k">elif</span> <span class="ow">not</span> <span class="n">caller_id</span><span class="p">:</span>
+<a name="app--voting_webapi.py-idio.html-142"></a>            <span class="n">t</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="s">&quot;Oops, you need to have caller eye dee enabled to vote. Goodbye.&quot;</span><span class="p">)</span>
+<a name="app--voting_webapi.py-idio.html-143"></a>            <span class="n">t</span><span class="o">.</span><span class="n">hangup</span><span class="p">()</span>
+<a name="app--voting_webapi.py-idio.html-144"></a>        <span class="k">else</span><span class="p">:</span>
+<a name="app--voting_webapi.py-idio.html-145"></a>            <span class="n">t</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="s">&quot;Oops, it looks like you have voted already. Goodbye.&quot;</span><span class="p">)</span>
+<a name="app--voting_webapi.py-idio.html-146"></a>            <span class="n">t</span><span class="o">.</span><span class="n">hangup</span><span class="p">()</span>
+<a name="app--voting_webapi.py-idio.html-147"></a>
+<a name="app--voting_webapi.py-idio.html-148"></a>        <span class="k">return</span> <span class="n">t</span><span class="o">.</span><span class="n">RenderJson</span><span class="p">()</span>
+<a name="app--voting_webapi.py-idio.html-149"></a>
+<a name="app--voting_webapi.py-idio.html-150"></a>    <span class="k">def</span> <span class="nf">POST</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a name="app--voting_webapi.py-idio.html-151"></a>        <span class="c"># save session info for this call</span>
+<a name="app--voting_webapi.py-idio.html-152"></a>        <span class="n">session_info</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">web</span><span class="o">.</span><span class="n">data</span><span class="p">())[</span><span class="s">&#39;session&#39;</span><span class="p">]</span>
+<a name="app--voting_webapi.py-idio.html-153"></a>
+<a name="app--voting_webapi.py-idio.html-154"></a>        <span class="n">tropo_call_id</span> <span class="o">=</span> <span class="n">session_info</span><span class="p">[</span><span class="s">&#39;callId&#39;</span><span class="p">]</span>
+<a name="app--voting_webapi.py-idio.html-155"></a>        <span class="n">caller_network</span> <span class="o">=</span> <span class="n">session_info</span><span class="p">[</span><span class="s">&#39;from&#39;</span><span class="p">][</span><span class="s">&#39;network&#39;</span><span class="p">]</span>
+<a name="app--voting_webapi.py-idio.html-156"></a>        <span class="n">caller_channel</span> <span class="o">=</span> <span class="n">session_info</span><span class="p">[</span><span class="s">&#39;from&#39;</span><span class="p">][</span><span class="s">&#39;channel&#39;</span><span class="p">]</span>
+<a name="app--voting_webapi.py-idio.html-157"></a>        <span class="n">caller_id</span> <span class="o">=</span> <span class="n">session_info</span><span class="p">[</span><span class="s">&#39;from&#39;</span><span class="p">][</span><span class="s">&#39;id&#39;</span><span class="p">]</span>
+<a name="app--voting_webapi.py-idio.html-158"></a>
+<a name="app--voting_webapi.py-idio.html-159"></a>        <span class="n">models</span><span class="o">.</span><span class="n">sessions</span><span class="o">.</span><span class="n">new_session</span><span class="p">(</span>
+<a name="app--voting_webapi.py-idio.html-160"></a>                <span class="n">tropo_call_id</span><span class="p">,</span>
+<a name="app--voting_webapi.py-idio.html-161"></a>                <span class="n">caller_network</span><span class="p">,</span>
+<a name="app--voting_webapi.py-idio.html-162"></a>                <span class="n">caller_channel</span><span class="p">,</span>
+<a name="app--voting_webapi.py-idio.html-163"></a>                <span class="n">caller_id</span><span class="p">)</span>
+<a name="app--voting_webapi.py-idio.html-164"></a>
+<a name="app--voting_webapi.py-idio.html-165"></a>        <span class="k">if</span> <span class="n">caller_channel</span> <span class="o">==</span> <span class="s">&#39;VOICE&#39;</span><span class="p">:</span>
+<a name="app--voting_webapi.py-idio.html-166"></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_voice</span><span class="p">()</span>
+<a name="app--voting_webapi.py-idio.html-167"></a>        <span class="k">else</span><span class="p">:</span>
+<a name="app--voting_webapi.py-idio.html-168"></a>            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;unexpected caller channel </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">caller_channel</span><span class="p">)</span>
+</pre></div>
+
+<h2>Preparing the Menu: A List of Songs</h2>
+<p>The point of the application is to allow callers to vote on which of the
+available songs they would most like to hear. So, callers will first be
+presented with a list of the available songs.</p>
+<h3>Scripting</h3>
+<p>Using the scripting interface, our script is run by the tropo instance so it
+doesn't have direct access to the database. We need to allow it to fetch a list
+of songs from our web application:</p>
+<p>Here we see a method in the songs model which returns an array of song
+information:</p>
 <div class="highlight"><pre><a name="models--songs.py-idio.html-9"></a><span class="k">def</span> <span class="nf">songs_array</span><span class="p">():</span>
 <a name="models--songs.py-idio.html-10"></a>    <span class="sd">&quot;&quot;&quot;</span>
 <a name="models--songs.py-idio.html-11"></a><span class="sd">    Returns an array of information for each song in the database.</span>
@@ -309,41 +382,51 @@ Change widths as necessary
 <a name="models--songs.py-idio.html-14"></a>    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">db</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s">&#39;songs&#39;</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s">&#39;number&#39;</span><span class="p">):</span>
 <a name="models--songs.py-idio.html-15"></a>        <span class="n">songs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">row</span><span class="p">[</span><span class="s">&#39;title&#39;</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s">&#39;keyword&#39;</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s">&#39;number&#39;</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s">&#39;votes_cache&#39;</span><span class="p">]))</span>
 <a name="models--songs.py-idio.html-16"></a>    <span class="k">return</span> <span class="n">songs</span>
+<a name="models--songs.py-idio.html-17"></a>
+<a name="models--songs.py-idio.html-18"></a><span class="k">def</span> <span class="nf">results</span><span class="p">():</span>
+<a name="models--songs.py-idio.html-19"></a>    <span class="sd">&quot;&quot;&quot;</span>
+<a name="models--songs.py-idio.html-20"></a><span class="sd">    Returns song titles and total votes sorted in order of voted preference.</span>
+<a name="models--songs.py-idio.html-21"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a name="models--songs.py-idio.html-22"></a>    <span class="n">songs</span> <span class="o">=</span> <span class="p">[]</span>
+<a name="models--songs.py-idio.html-23"></a>    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">db</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s">&#39;songs&#39;</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s">&#39;votes_cache DESC&#39;</span><span class="p">):</span>
+<a name="models--songs.py-idio.html-24"></a>        <span class="n">votes</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s">&#39;votes_cache&#39;</span><span class="p">]</span> <span class="ow">or</span> <span class="s">&quot;0&quot;</span>
+<a name="models--songs.py-idio.html-25"></a>        <span class="n">songs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">row</span><span class="p">[</span><span class="s">&#39;title&#39;</span><span class="p">],</span> <span class="n">votes</span><span class="p">))</span>
+<a name="models--songs.py-idio.html-26"></a>    <span class="k">return</span> <span class="n">songs</span>
 </pre></div>
 
 <p>We expose the available songs as a simple CSV listing:</p>
-<div class="highlight"><pre><a name="app--voice.py-idio.html-44"></a><span class="k">class</span> <span class="nc">Songs</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-<a name="app--voice.py-idio.html-45"></a>    <span class="k">def</span> <span class="nf">GET</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<a name="app--voice.py-idio.html-46"></a>        <span class="n">songs_array</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">songs</span><span class="o">.</span><span class="n">songs_array</span><span class="p">()</span>
-<a name="app--voice.py-idio.html-47"></a>        <span class="n">output</span> <span class="o">=</span> <span class="n">StringIO</span><span class="o">.</span><span class="n">StringIO</span><span class="p">()</span>
-<a name="app--voice.py-idio.html-48"></a>        <span class="n">writer</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">quoting</span><span class="o">=</span><span class="n">csv</span><span class="o">.</span><span class="n">QUOTE_ALL</span><span class="p">)</span>
-<a name="app--voice.py-idio.html-49"></a>        <span class="n">writer</span><span class="o">.</span><span class="n">writerows</span><span class="p">(</span><span class="n">songs_array</span><span class="p">)</span>
-<a name="app--voice.py-idio.html-50"></a>        <span class="k">return</span> <span class="n">output</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span>
+<div class="highlight"><pre><a name="app--voting_scripting.py-idio.html-8"></a><span class="k">class</span> <span class="nc">SongsController</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<a name="app--voting_scripting.py-idio.html-9"></a>    <span class="k">def</span> <span class="nf">GET</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a name="app--voting_scripting.py-idio.html-10"></a>        <span class="n">songs_array</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">songs</span><span class="o">.</span><span class="n">songs_array</span><span class="p">()</span>
+<a name="app--voting_scripting.py-idio.html-11"></a>        <span class="n">output</span> <span class="o">=</span> <span class="n">StringIO</span><span class="o">.</span><span class="n">StringIO</span><span class="p">()</span>
+<a name="app--voting_scripting.py-idio.html-12"></a>        <span class="n">writer</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">quoting</span><span class="o">=</span><span class="n">csv</span><span class="o">.</span><span class="n">QUOTE_ALL</span><span class="p">)</span>
+<a name="app--voting_scripting.py-idio.html-13"></a>        <span class="n">writer</span><span class="o">.</span><span class="n">writerows</span><span class="p">(</span><span class="n">songs_array</span><span class="p">)</span>
+<a name="app--voting_scripting.py-idio.html-14"></a>        <span class="k">return</span> <span class="n">output</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span>
 </pre></div>
 
 <div class="highlight"><pre><a name="docs--curl.sh-pyg.html-1"></a>curl http://voice.pitchlift.org/songs.csv
 </pre></div>
 
 <pre>
-"Piano Man by Billy Joel","piano","1",""
+"Piano Man by Billy Joel","piano","1","2"
 "Imagine by John Lennon","imagine","2","1"
-"Rocket Man by Elton John","rocket","3","3"
+"Rocket Man by Elton John","rocket","3",""
 "Crazy Little Thing Called Love by Queen","crazy","4",""
-"Daydream Believer by The Monkees","daydream","5",""
-"Sweet Caroline by Neil Diamond","caroline","6","2"
+"Daydream Believer by The Monkees","daydream","5","3"
+"Sweet Caroline by Neil Diamond","caroline","6","1"
 "Hey Jude by The Beatles","jude","7",""
 "Don't Stop Believin by Journey","believing","8",""
-"Tainted Love by Soft Cell","tainted","9","2"
+"Tainted Love by Soft Cell","tainted","9",""
 
 </pre>
 
-<h2>Calling</h2>
-<p>In our voice script, we parse this CSV data to obtain a list of songs which we use to prompt the caller with:</p>
+<p>In our voice script, we fetch and parse this CSV data:</p>
 <div class="highlight"><pre><a name="app--script.py-idio.html-14"></a><span class="n">songs_url</span> <span class="o">=</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">SONGS_DATA</span><span class="p">)</span>
 <a name="app--script.py-idio.html-15"></a><span class="n">songs_array</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">songs_url</span><span class="p">)</span>
 </pre></div>
 
-<p>We prepare the prompt which will tell the user how to vote for each song:</p>
+<p>We prepare the menu prompt which will tell the user how to vote for each song
+and tells Tropo what the acceptable responses are:</p>
 <div class="highlight"><pre><a name="app--script.py-idio.html-18"></a><span class="n">prompts</span> <span class="o">=</span> <span class="p">[]</span>
 <a name="app--script.py-idio.html-19"></a><span class="n">choices</span> <span class="o">=</span> <span class="p">[]</span>
 <a name="app--script.py-idio.html-20"></a><span class="k">for</span> <span class="n">title</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">number</span><span class="p">,</span> <span class="n">votes_cache</span> <span class="ow">in</span> <span class="n">songs_array</span><span class="p">:</span>
@@ -352,50 +435,72 @@ Change widths as necessary
 <a name="app--script.py-idio.html-23"></a><span class="n">prompt</span> <span class="o">=</span> <span class="s">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">prompts</span><span class="p">)</span>
 </pre></div>
 
-<p>Now we greet the caller and play our prompt, capturing the result:</p>
-<div class="highlight"><pre><a name="app--script.py-idio.html-26"></a><span class="n">result</span> <span class="o">=</span> <span class="n">ask</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;choices&#39;</span> <span class="p">:</span> <span class="s">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">choices</span><span class="p">)</span> <span class="p">})</span>
+<h3>Web API</h3>
+<p>Using the Tropo Web API, we have direct access to the database, so we prepare
+the prompt directly.</p>
+<div class="highlight"><pre><a name="app--voting_webapi.py-idio.html-93"></a>    <span class="k">def</span> <span class="nf">do_menu</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a name="app--voting_webapi.py-idio.html-94"></a>        <span class="n">t</span> <span class="o">=</span> <span class="n">Tropo</span><span class="p">()</span>
+<a name="app--voting_webapi.py-idio.html-95"></a>        <span class="n">t</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="s">&quot;hello, thank you for helping us choose the music&quot;</span><span class="p">)</span>
+<a name="app--voting_webapi.py-idio.html-96"></a>
+<a name="app--voting_webapi.py-idio.html-97"></a>        <span class="n">prompts</span> <span class="o">=</span> <span class="p">[]</span>
+<a name="app--voting_webapi.py-idio.html-98"></a>        <span class="n">choices</span> <span class="o">=</span> <span class="p">[]</span>
+<a name="app--voting_webapi.py-idio.html-99"></a>        <span class="k">for</span> <span class="n">title</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">number</span><span class="p">,</span> <span class="n">votes_cache</span> <span class="ow">in</span> <span class="n">models</span><span class="o">.</span><span class="n">songs</span><span class="o">.</span><span class="n">songs_array</span><span class="p">():</span>
+<a name="app--voting_webapi.py-idio.html-100"></a>            <span class="n">choices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%s</span><span class="s">(</span><span class="si">%s</span><span class="s">,</span><span class="si">%s</span><span class="s">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">number</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">number</span><span class="p">))</span>
+<a name="app--voting_webapi.py-idio.html-101"></a>            <span class="n">prompts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&quot;For </span><span class="si">%(title)s</span><span class="s">, say </span><span class="si">%(keyword)s</span><span class="s"> or press </span><span class="si">%(number)s</span><span class="s">.&quot;</span> <span class="o">%</span> <span class="nb">locals</span><span class="p">())</span>
+<a name="app--voting_webapi.py-idio.html-102"></a>        <span class="n">prompt</span> <span class="o">=</span> <span class="s">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">prompts</span><span class="p">)</span>
+<a name="app--voting_webapi.py-idio.html-103"></a>
+<a name="app--voting_webapi.py-idio.html-104"></a>        <span class="n">t</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span><span class="n">Choices</span><span class="p">(</span><span class="s">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">choices</span><span class="p">)),</span> <span class="n">say</span><span class="o">=</span><span class="n">prompt</span><span class="p">)</span>
+<a name="app--voting_webapi.py-idio.html-105"></a>        <span class="n">t</span><span class="o">.</span><span class="n">on</span><span class="p">(</span><span class="n">event</span><span class="o">=</span><span class="s">&quot;continue&quot;</span><span class="p">,</span> <span class="nb">next</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">response_url</span><span class="p">())</span>
+<a name="app--voting_webapi.py-idio.html-106"></a>        <span class="k">return</span> <span class="n">t</span><span class="o">.</span><span class="n">RenderJson</span><span class="p">()</span>
 </pre></div>
 
 <h2>Voting</h2>
+<h3>Scripting</h3>
+<p>In the scripting API, we greet the caller and play the menu prompt, capturing the result:</p>
+<div class="highlight"><pre><a name="app--script.py-idio.html-26"></a><span class="n">result</span> <span class="o">=</span> <span class="n">ask</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;choices&#39;</span> <span class="p">:</span> <span class="s">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">choices</span><span class="p">)</span> <span class="p">})</span>
+</pre></div>
+
 <p>Then we post the vote to the server to save it:</p>
 <div class="highlight"><pre><a name="app--script.py-idio.html-29"></a><span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">&quot;choice&quot;</span><span class="p">:</span>
 <a name="app--script.py-idio.html-30"></a>    <span class="n">vote_response</span> <span class="o">=</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">VOTE_URL</span><span class="p">,</span> <span class="s">&quot;song=</span><span class="si">%s</span><span class="s">&amp;from=</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">currentCall</span><span class="o">.</span><span class="n">callerID</span><span class="p">))</span>
 <a name="app--script.py-idio.html-31"></a>    <span class="n">say</span><span class="p">(</span><span class="n">vote_response</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
 </pre></div>
 
+<h3>Web API</h3>
+<h2>Saving Vote</h2>
 <p>The server page appends the vote to the database:</p>
-<div class="highlight"><pre><a name="app--voice.py-idio.html-53"></a><span class="k">class</span> <span class="nc">Vote</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-<a name="app--voice.py-idio.html-54"></a>    <span class="k">def</span> <span class="nf">POST</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<a name="app--voice.py-idio.html-55"></a>        <span class="n">pairs</span> <span class="o">=</span> <span class="n">web</span><span class="o">.</span><span class="n">data</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;&amp;&quot;</span><span class="p">)</span>
-<a name="app--voice.py-idio.html-56"></a>        <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
-<a name="app--voice.py-idio.html-57"></a>        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">pairs</span><span class="p">:</span>
-<a name="app--voice.py-idio.html-58"></a>            <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;=&quot;</span><span class="p">)</span>
-<a name="app--voice.py-idio.html-59"></a>            <span class="n">data</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
-<a name="app--voice.py-idio.html-60"></a>
-<a name="app--voice.py-idio.html-61"></a>        <span class="n">song_number</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s">&quot;song&quot;</span><span class="p">])</span>
-<a name="app--voice.py-idio.html-62"></a>        <span class="n">models</span><span class="o">.</span><span class="n">votes</span><span class="o">.</span><span class="n">vote_for_song</span><span class="p">(</span><span class="n">song_number</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s">&quot;from&quot;</span><span class="p">])</span>
-<a name="app--voice.py-idio.html-63"></a>        <span class="n">song_title</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">songs</span><span class="o">.</span><span class="n">song_title</span><span class="p">(</span><span class="n">song_number</span><span class="p">)</span>
-<a name="app--voice.py-idio.html-64"></a>        <span class="k">return</span> <span class="s">&quot;You voted for song: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">song_title</span>
+<div class="highlight"><pre><a name="app--voting_scripting.py-idio.html-17"></a><span class="k">class</span> <span class="nc">VoteScriptingController</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<a name="app--voting_scripting.py-idio.html-18"></a>    <span class="k">def</span> <span class="nf">POST</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a name="app--voting_scripting.py-idio.html-19"></a>        <span class="n">pairs</span> <span class="o">=</span> <span class="n">web</span><span class="o">.</span><span class="n">data</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;&amp;&quot;</span><span class="p">)</span>
+<a name="app--voting_scripting.py-idio.html-20"></a>        <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
+<a name="app--voting_scripting.py-idio.html-21"></a>        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">pairs</span><span class="p">:</span>
+<a name="app--voting_scripting.py-idio.html-22"></a>            <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;=&quot;</span><span class="p">)</span>
+<a name="app--voting_scripting.py-idio.html-23"></a>            <span class="n">data</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+<a name="app--voting_scripting.py-idio.html-24"></a>
+<a name="app--voting_scripting.py-idio.html-25"></a>        <span class="n">song_number</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s">&quot;song&quot;</span><span class="p">])</span>
+<a name="app--voting_scripting.py-idio.html-26"></a>        <span class="n">models</span><span class="o">.</span><span class="n">votes</span><span class="o">.</span><span class="n">vote_for_song</span><span class="p">(</span><span class="n">song_number</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s">&quot;from&quot;</span><span class="p">])</span>
+<a name="app--voting_scripting.py-idio.html-27"></a>        <span class="n">song_title</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">songs</span><span class="o">.</span><span class="n">song_title</span><span class="p">(</span><span class="n">song_number</span><span class="p">)</span>
+<a name="app--voting_scripting.py-idio.html-28"></a>        <span class="k">return</span> <span class="s">&quot;You voted for song: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">song_title</span>
 </pre></div>
 
 <p>The votes model handles the appending:</p>
-<div class="highlight"><pre><a name="models--votes.py-idio.html-8"></a><span class="k">def</span> <span class="nf">vote_for_song</span><span class="p">(</span><span class="n">song_number</span><span class="p">,</span> <span class="n">phone_number</span><span class="p">):</span>
-<a name="models--votes.py-idio.html-9"></a>    <span class="sd">&quot;&quot;&quot;</span>
-<a name="models--votes.py-idio.html-10"></a><span class="sd">    Insert a vote and increment the cache.</span>
-<a name="models--votes.py-idio.html-11"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a name="models--votes.py-idio.html-12"></a>    <span class="n">db</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="s">&#39;votes&#39;</span><span class="p">,</span> <span class="n">song_number</span><span class="o">=</span><span class="n">song_number</span><span class="p">,</span> <span class="n">phone_number</span><span class="o">=</span><span class="n">phone_number</span><span class="p">)</span>
-<a name="models--votes.py-idio.html-13"></a>    <span class="n">models</span><span class="o">.</span><span class="n">songs</span><span class="o">.</span><span class="n">cache_vote</span><span class="p">(</span><span class="n">song_number</span><span class="p">)</span>
-<a name="models--votes.py-idio.html-14"></a>    <span class="k">return</span> <span class="n">song_number</span>
+<div class="highlight"><pre><a name="models--votes.py-idio.html-33"></a><span class="k">def</span> <span class="nf">vote_for_song</span><span class="p">(</span><span class="n">song_number</span><span class="p">,</span> <span class="n">phone_number</span><span class="p">):</span>
+<a name="models--votes.py-idio.html-34"></a>    <span class="sd">&quot;&quot;&quot;</span>
+<a name="models--votes.py-idio.html-35"></a><span class="sd">    Insert a vote and increment the cache.</span>
+<a name="models--votes.py-idio.html-36"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a name="models--votes.py-idio.html-37"></a>    <span class="n">db</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="s">&#39;votes&#39;</span><span class="p">,</span> <span class="n">song_number</span><span class="o">=</span><span class="n">song_number</span><span class="p">,</span> <span class="n">phone_number</span><span class="o">=</span><span class="n">phone_number</span><span class="p">)</span>
+<a name="models--votes.py-idio.html-38"></a>    <span class="n">models</span><span class="o">.</span><span class="n">songs</span><span class="o">.</span><span class="n">cache_vote</span><span class="p">(</span><span class="n">song_number</span><span class="p">)</span>
+<a name="models--votes.py-idio.html-39"></a>    <span class="k">return</span> <span class="n">song_number</span>
 </pre></div>
 
-<div class="highlight"><pre><a name="models--songs.py-idio.html-19"></a><span class="k">def</span> <span class="nf">cache_vote</span><span class="p">(</span><span class="n">number</span><span class="p">):</span>
-<a name="models--songs.py-idio.html-20"></a>    <span class="sd">&quot;&quot;&quot;</span>
-<a name="models--songs.py-idio.html-21"></a><span class="sd">    Increments the cached votes for this song.</span>
-<a name="models--songs.py-idio.html-22"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a name="models--songs.py-idio.html-23"></a>    <span class="n">previous_votes_cache</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s">&quot;songs&quot;</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="s">&quot;number=$number&quot;</span><span class="p">,</span> <span class="nb">vars</span><span class="o">=</span><span class="nb">locals</span><span class="p">())[</span><span class="mi">0</span><span class="p">][</span><span class="s">&#39;votes_cache&#39;</span><span class="p">]</span>
-<a name="models--songs.py-idio.html-24"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">previous_votes_cache</span><span class="p">:</span>
-<a name="models--songs.py-idio.html-25"></a>        <span class="n">previous_votes_cache</span> <span class="o">=</span> <span class="mi">0</span>
-<a name="models--songs.py-idio.html-26"></a>    <span class="n">db</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="s">&quot;songs&quot;</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="s">&quot;number=$number&quot;</span><span class="p">,</span> <span class="n">votes_cache</span><span class="o">=</span><span class="n">previous_votes_cache</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="nb">vars</span><span class="o">=</span><span class="nb">locals</span><span class="p">())</span>
+<div class="highlight"><pre><a name="models--songs.py-idio.html-29"></a><span class="k">def</span> <span class="nf">cache_vote</span><span class="p">(</span><span class="n">number</span><span class="p">):</span>
+<a name="models--songs.py-idio.html-30"></a>    <span class="sd">&quot;&quot;&quot;</span>
+<a name="models--songs.py-idio.html-31"></a><span class="sd">    Increments the cached votes for this song.</span>
+<a name="models--songs.py-idio.html-32"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a name="models--songs.py-idio.html-33"></a>    <span class="n">previous_votes_cache</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s">&quot;songs&quot;</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="s">&quot;number=$number&quot;</span><span class="p">,</span> <span class="nb">vars</span><span class="o">=</span><span class="nb">locals</span><span class="p">())[</span><span class="mi">0</span><span class="p">][</span><span class="s">&#39;votes_cache&#39;</span><span class="p">]</span>
+<a name="models--songs.py-idio.html-34"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">previous_votes_cache</span><span class="p">:</span>
+<a name="models--songs.py-idio.html-35"></a>        <span class="n">previous_votes_cache</span> <span class="o">=</span> <span class="mi">0</span>
+<a name="models--songs.py-idio.html-36"></a>    <span class="n">db</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="s">&quot;songs&quot;</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="s">&quot;number=$number&quot;</span><span class="p">,</span> <span class="n">votes_cache</span><span class="o">=</span><span class="n">previous_votes_cache</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="nb">vars</span><span class="o">=</span><span class="nb">locals</span><span class="p">())</span>
 </pre></div>
 
 <p>We can view individual votes for debugging (to be removed):</p>
@@ -404,16 +509,13 @@ Change widths as necessary
 
 <pre>
 <pre>
-Person calling from ananelson voted for Rocket Man by Elton John (#3)
-Person calling from ananelson voted for Tainted Love by Soft Cell (#9)
-Person calling from wchen_stanford voted for Imagine by John Lennon (#2)
-Person calling from wchen_stanford voted for Rocket Man by Elton John (#3)
-Person calling from wchen_stanford voted for Sweet Caroline by Neil Diamond (#6)
-Person calling from wchen_stanford voted for Rocket Man by Elton John (#3)
-Person calling from ananelson voted for Rocket Man by Elton John (#3)
-Person calling from wchen_stanford voted for Rocket Man by Elton John (#3)
-Person calling from wchen_stanford voted for Sweet Caroline by Neil Diamond (#6)
-Person calling from wchen_stanford voted for Tainted Love by Soft Cell (#9)
+Person calling from ananelson voted for Imagine by John Lennon (#2)
+Person calling from ananelson voted for Sweet Caroline by Neil Diamond (#6)
+Person calling from wchen_stanford voted for Daydream Believer by The Monkees (#5)
+Person calling from wchen_stanford voted for Daydream Believer by The Monkees (#5)
+Person calling from ananelson voted for Piano Man by Billy Joel (#1)
+Person calling from wchen_stanford voted for Daydream Believer by The Monkees (#5)
+Person calling from wchen_stanford voted for Piano Man by Billy Joel (#1)
 </pre>
 </pre>
 
@@ -422,28 +524,57 @@ Person calling from wchen_stanford voted for Tainted Love by Soft Cell (#9)
 </pre></div>
 
 <pre>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+    <head>
+        <meta http-equiv="Content-type" content="text/html" />
+        <title>Hey, Diggz, play my song!</title>
+        <link href="/css/style.css" type="text/css"rel="stylesheet" />
+        <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.2.min.js">
+        </script>
+        <script type="text/javascript">
+            function updater() {
+                $.ajax({
+                    url: '/results',
+                    success: function(data) {
+                       $('#results').html(data);
+                    },
+                    complete: function() {
+                       setTimeout(updater, 5000);
+                    }
+                })
+            };
 
-        <pre>
-        Phone Numbers:
-        Skype Voice: +990009369996171439
-        SIP Voice: sip:9996171439@sip.tropo.com
-        INum Voice: +883510001187547
-        Phono App Address: app:9996171439
-        </pre>
+            $(document).ready(function() {
+                updater();
+            });
+        </script>
+    </head>
+    <body>
+        <div class="zp-wrapper">
+            <div class="zp-70 content">
+                <div class="padding">
+                    <p class="blue big">Hey, Diggz, play my song!</p>
+                    <p class="blue">Call this number to vote: +990009369996194333</p>
+                    <p class="blue">Current rankings:</p>
+                    <ul id="results">
+                        <li>Daydream Believer by The Monkees (3 votes)</li>
+<li>Piano Man by Billy Joel (2 votes)</li>
+<li>Imagine by John Lennon (1 votes)</li>
+<li>Sweet Caroline by Neil Diamond (1 votes)</li>
+<li>Rocket Man by Elton John (0 votes)</li>
+<li>Crazy Little Thing Called Love by Queen (0 votes)</li>
+<li>Hey Jude by The Beatles (0 votes)</li>
+<li>Don't Stop Believin by Journey (0 votes)</li>
+<li>Tainted Love by Soft Cell (0 votes)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
 
-<table>
-<tr><th>Song</th><th>Votes</th></tr>
-<tr><td>Piano Man by Billy Joel</td><td>None</td></tr>
-<tr><td>Imagine by John Lennon</td><td>1</td></tr>
-<tr><td>Rocket Man by Elton John</td><td>3</td></tr>
-<tr><td>Crazy Little Thing Called Love by Queen</td><td>None</td></tr>
-<tr><td>Daydream Believer by The Monkees</td><td>None</td></tr>
-<tr><td>Sweet Caroline by Neil Diamond</td><td>2</td></tr>
-<tr><td>Hey Jude by The Beatles</td><td>None</td></tr>
-<tr><td>Don't Stop Believin by Journey</td><td>None</td></tr>
-<tr><td>Tainted Love by Soft Cell</td><td>2</td></tr>
-</table>
-<p><a href="/docs">docs</a></p>
 </pre>
         </div>
     </div>
