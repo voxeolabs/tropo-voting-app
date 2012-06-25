@@ -15,6 +15,16 @@ def songs_array():
         songs.append((row['title'], row['keyword'], row['number'], row['votes_cache']))
     return songs
 
+def results():
+    """
+    Returns song titles and total votes sorted in order of voted preference.
+    """
+    songs = []
+    for row in db.select('songs', order='votes_cache DESC'):
+        votes = row['votes_cache'] or "0"
+        songs.append((row['title'], votes))
+    return songs
+
 ### @export "cache-vote"
 def cache_vote(number):
     """

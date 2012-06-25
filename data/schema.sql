@@ -20,3 +20,11 @@ CREATE TABLE votes (
     song_number INTEGER,
     phone_number TEXT
 );
+
+CREATE TABLE sessions (
+    tropo_call_id TEXT,
+    caller_network TEXT,
+    caller_channel TEXT,
+    caller_id TEXT
+);
+
