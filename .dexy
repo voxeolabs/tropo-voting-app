@@ -1,0 +1,8 @@
+{
+    "*.py|idio" : {},
+    "*.sql|pyg" : {},
+    "*.sh|pyg" : {},
+    "*.sh|idio" : {},
+    "apache.conf|idio" : { "idio" : { "lexer" : "apache" }},
+    "*.md|jinjajit|markdown|easyhtml" : { "markdown" : { "toc" : { "anchorlink" : true } }, "allinputs" : true }
+}

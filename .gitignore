@@ -1,0 +1,8 @@
+output-long/
+output/
+artifacts/
+logs/
+app/docs
+*.sqlite3
+*.pyc
+*.sw*
