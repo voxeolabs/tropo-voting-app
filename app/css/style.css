@@ -61,13 +61,13 @@ p.blue {
 
 ul, ol {
     display: block;
-    margin-left: 200px;
-    margin-right: 200px;
+    margin-left: 100px;
+    margin-right: 100px;
 }
 
 li {
     color: #00FF00;
-    font-size: 120%;
+    font-size: 110%;
 }
 
 p.big {
