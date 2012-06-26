@@ -148,6 +148,8 @@ class StartWebapiController(BaseWebapiController):
         return t.RenderJson()
 
     def POST(self):
+        web.debug(web.data())
+
         # save session info for this call
         session_info = json.loads(web.data())['session']
 
