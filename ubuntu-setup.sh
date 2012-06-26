@@ -26,6 +26,7 @@ cd ..
 
 ### @export "install-apache"
 apt-get install -y apache2
+a2enmod rewrite
 
 ### @export "install-wsgi"
 apt-get install -y libapache2-mod-wsgi
@@ -41,7 +42,6 @@ chown -R www-data data
 export TROPO_VOTING_APP_SERVER_NAME="example.com" # change to canonical server name or point IP address to example.com in your /etc/hosts for testing
 
 ### @export "configure-apache"
-rm /etc/apache2/sites-available/default # uncomment to remove other vhosts
+#rm /etc/apache2/sites-available/default # uncomment to remove other vhosts
 echo "Include /var/www/tropo-voting-app/apache.conf" >> /etc/apache2/sites-available/default
-a2enmod rewrite
 apachectl restart
