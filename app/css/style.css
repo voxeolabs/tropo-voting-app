@@ -26,6 +26,7 @@ footer, header, hgroup, menu, nav, section {
 body {
     line-height: 2;
     background-color: black;
+    font-family: "Balthazar", serif;
     color: white;
 }
 
@@ -77,5 +78,4 @@ p.small {
     margin-left: 0px;
     margin-right: 0px;
     font-size: 100%;
-    color: black;
 }

@@ -6,23 +6,14 @@ import web
 db = web.database(dbn='sqlite', db='../data/data.sqlite3')
 
 ### @export "songs-array"
-def songs_array():
+def songs_array(order='number'):
     """
     Returns an array of information for each song in the database.
     """
     songs = []
-    for row in db.select('songs', order='number'):
-        songs.append((row['title'], row['keyword'], row['number'], row['votes_cache']))
-    return songs
-
-def results():
-    """
-    Returns song titles and total votes sorted in order of voted preference.
-    """
-    songs = []
-    for row in db.select('songs', order='votes_cache DESC'):
+    for row in db.select('songs', order=order):
         votes = row['votes_cache'] or "0"
-        songs.append((row['title'], votes))
+        songs.append((row['title'], row['keyword'], row['number'], votes))
     return songs
 
 ### @export "cache-vote"

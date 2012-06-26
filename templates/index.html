@@ -4,45 +4,24 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
     <head>
         <meta http-equiv="Content-type" content="text/html" />
-        <title>Hey, Diggz, play my song!</title>
-        <link href="/css/style.css" type="text/css"rel="stylesheet" />
-        <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.2.min.js">
+        <title>Play My Song</title>
+        <link href='http://fonts.googleapis.com/css?family=Balthazar' rel='stylesheet' type='text/css'>
+        <link href="/css/style.css" type="text/css" rel="stylesheet" />
+        <script type="text/javascript" src="/js/jquery-1.7.2.min.js">
         </script>
-        <script type="text/javascript">
-            function updater() {
-                $$.ajax({
-                    url: '/results',
-                    success: function(data) {
-                       $$('#results').html(data);
-                    },
-                    complete: function() {
-                       setTimeout(updater, 5000);
-                    }
-                })
-            };
-
-            $$(document).ready(function() {
-                updater();
-            });
+        <script type="text/javascript" src="/js/script.js">
         </script>
     </head>
     <body>
-        <div class="zp-wrapper">
-            <div class="zp-70 content">
-                <div class="padding">
-                    <p class="blue big">Hey, Diggz, play my song!</p>
-                    <p class="blue">Call this number to vote: $voting_hotline</p>
-                    <p class="blue">Current rankings:</p>
-                    <ul id="results">
-                        $:results_table
-                    </ul>
-                    <div style="display: block; width: 300px; padding: 20px; float: right; background-color: white;">
-                        <p class="small">Voting Powered By</p>
-                        <br />
-                        <img alt="tropo logo" src="/images/tropo-logo.png" />
-                    </div>
-                </div>
-            </div>
+        <p class="blue big">Hey, Diggz, play my song!</p>
+        <p class="blue">Call this number to vote: $voting_hotline</p>
+        <p class="blue">Current rankings:</p>
+        <ul id="results">
+            $:results_table
+        </ul>
+        <div style="padding-top: 100px;">
+            <p class="small">Voting Powered By</p>
+            <p class="small"><img width="300px" alt="tropo logo" src="/images/tropo-white.png" /></p>
         </div>
     </body>
 </html>

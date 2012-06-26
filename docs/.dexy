@@ -1,3 +1,4 @@
 {
-    "*.sh|sh" : {}
+    "*.js|fn|casperjs": {},
+    "*.sh|sh": {}
 }

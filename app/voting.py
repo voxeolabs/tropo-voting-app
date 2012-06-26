@@ -34,8 +34,8 @@ def results_table():
     Make it so we can share code between ajax and vanilla versions of results table.
     """
     html = []
-    for title, votes in models.songs.results():
-        html.append("<li>%s (%s votes)</li>" % (title, votes))
+    for title, keyword, number, votes in models.songs.songs_array('votes_cache DESC'):
+        html.append("<li>%s (%s votes) - to vote say '%s' or press %s</li>" % (title, votes, keyword, number))
     return "\n".join(html)
 
 ### @export "index"

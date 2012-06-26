@@ -180,11 +180,9 @@ We can view individual votes for debugging (to be removed):
 {{ d['curl-votes.sh|pyg'] }}
 
 <pre>
+{{ d['curl-votes.sh|sh'] }}
 </pre>
 
 The app's home page shows us the songs and current vote tally:
 
-{{ d['curl-home.sh|pyg'] }}
-
-<pre>
-</pre>
+![home page screenshot](home.png)
