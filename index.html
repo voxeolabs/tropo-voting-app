@@ -272,7 +272,164 @@ Change widths as necessary
     <body>
     <div id="content">
         <div class="g3">
-<h2>Overview</h2>
+<div class="toc">
+<ul>
+<li><a href="#system-setup-and-installation">System Setup and Installation</a></li>
+<li><a href="#overview">Overview</a></li>
+<li><a href="#getting-started">Getting Started</a><ul>
+<li><a href="#scripting">Scripting</a></li>
+<li><a href="#webapi">WebAPI</a></li>
+</ul>
+</li>
+<li><a href="#preparing-the-menu-a-list-of-songs">Preparing the Menu: A List of Songs</a><ul>
+<li><a href="#scripting_1">Scripting</a></li>
+<li><a href="#web-api">Web API</a></li>
+</ul>
+</li>
+<li><a href="#voting">Voting</a><ul>
+<li><a href="#scripting_2">Scripting</a></li>
+<li><a href="#web-api_1">Web API</a></li>
+</ul>
+</li>
+<li><a href="#saving-vote">Saving Vote</a></li>
+</ul>
+</div>
+<h2 id="system-setup-and-installation"><a class="toclink" href="#system-setup-and-installation">System Setup and Installation</a></h2>
+<p>The web application described here is written using <a href="http://webpy.org">the web.py
+framework</a>. A config file is included for deployment using
+apache and mod_wsgi, more information can be found
+<a href="http://webpy.org/cookbook/mod_wsgi-apache">here</a> and in the section called
+'Deployment' <a href="http://webpy.org/cookbook/">on this page</a>.</p>
+<p>The ubuntu installation instructions provided below have been verified using an
+EC2 instance running the AMI shown in this launch script:</p>
+<div class="highlight"><pre><a name="run-ec2.sh-pyg.html-1"></a><span class="nv">UBUNTU_AMI</span><span class="o">=</span><span class="s2">&quot;ami-82fa58eb&quot;</span>
+<a name="run-ec2.sh-pyg.html-2"></a><span class="nv">INSTANCE_TYPE</span><span class="o">=</span><span class="s2">&quot;t1.micro&quot;</span>
+<a name="run-ec2.sh-pyg.html-3"></a><span class="nv">CURDIR</span><span class="o">=</span><span class="sb">`</span><span class="nb">pwd</span><span class="sb">`</span>
+<a name="run-ec2.sh-pyg.html-4"></a>
+<a name="run-ec2.sh-pyg.html-5"></a><span class="nb">cd</span> ~/.ec2
+<a name="run-ec2.sh-pyg.html-6"></a><span class="nb">source </span>dexy-env.sh
+<a name="run-ec2.sh-pyg.html-7"></a>
+<a name="run-ec2.sh-pyg.html-8"></a>ec2-run-instances <span class="nv">$UBUNTU_AMI</span> -k <span class="nv">$EC2_KEYPAIR</span> -t <span class="nv">$INSTANCE_TYPE</span> <span class="se">\</span>
+<a name="run-ec2.sh-pyg.html-9"></a>  --instance-initiated-shutdown-behavior stop <span class="se">\</span>
+<a name="run-ec2.sh-pyg.html-10"></a>  -f <span class="nv">$CURDIR</span>/ubuntu-setup.sh
+</pre></div>
+
+<p>Here are the full instructions for installing all necessary software and starting the web application on a generic ubuntu server.</p>
+<p>We start by making sure we have the latest system updates and all install packages are upgraded to their most recent versions:</p>
+<div class="highlight"><pre><a name="ubuntu-setup.sh-idio.html-7"></a>apt-get update
+<a name="ubuntu-setup.sh-idio.html-8"></a>apt-get upgrade -y --force-yes
+</pre></div>
+
+<p>We will need git for installing code from repositories:</p>
+<div class="highlight"><pre><a name="ubuntu-setup.sh-idio.html-11"></a>apt-get install -y git-core
+</pre></div>
+
+<p>We install python and <a href="http://www.pip-installer.org/">pip</a> for installing python packages:</p>
+<div class="highlight"><pre><a name="ubuntu-setup.sh-idio.html-14"></a>apt-get install -y python-dev
+<a name="ubuntu-setup.sh-idio.html-15"></a>apt-get install -y python-pip
+</pre></div>
+
+<p>We use ubuntu's package manager to install the webpy framework and also the sqlite3 database:</p>
+<div class="highlight"><pre><a name="ubuntu-setup.sh-idio.html-18"></a>apt-get install -y python-webpy
+<a name="ubuntu-setup.sh-idio.html-19"></a>apt-get install -y sqlite3
+</pre></div>
+
+<p>We install the tropo-webapi-python package from source:</p>
+<div class="highlight"><pre><a name="ubuntu-setup.sh-idio.html-22"></a>git clone https://github.com/tropo/tropo-webapi-python.git
+<a name="ubuntu-setup.sh-idio.html-23"></a><span class="nb">cd </span>tropo-webapi-python
+<a name="ubuntu-setup.sh-idio.html-24"></a>pip install .
+<a name="ubuntu-setup.sh-idio.html-25"></a><span class="nb">cd</span> ..
+</pre></div>
+
+<p>We install the apache2 server and ensure that mod_rewrite is enabled:</p>
+<div class="highlight"><pre><a name="ubuntu-setup.sh-idio.html-28"></a>apt-get install -y apache2
+<a name="ubuntu-setup.sh-idio.html-29"></a>a2enmod rewrite
+</pre></div>
+
+<p>We install mod_wsgi which will let us easily use apache to run web.py applications:</p>
+<div class="highlight"><pre><a name="ubuntu-setup.sh-idio.html-32"></a>apt-get install -y libapache2-mod-wsgi
+</pre></div>
+
+<p>Next we fetch the source code for our web application and create the sqlite database from the schema:</p>
+<div class="highlight"><pre><a name="ubuntu-setup.sh-idio.html-35"></a><span class="nb">cd</span> /var/www
+<a name="ubuntu-setup.sh-idio.html-36"></a>git clone https://github.com/voxeolabs/tropo-voting-app
+<a name="ubuntu-setup.sh-idio.html-37"></a><span class="nb">cd </span>tropo-voting-app
+<a name="ubuntu-setup.sh-idio.html-38"></a>sqlite3 data/data.sqlite3 &lt; data/schema.sql
+<a name="ubuntu-setup.sh-idio.html-39"></a>chown -R www-data data
+</pre></div>
+
+<p>We specify the canonical server name to be used in an environment variable which will be picked up by apache:</p>
+<div class="highlight"><pre><a name="ubuntu-setup.sh-idio.html-42"></a><span class="nb">export </span><span class="nv">TROPO_VOTING_APP_SERVER_NAME</span><span class="o">=</span><span class="s2">&quot;example.com&quot;</span> <span class="c"># change to canonical server name or point IP address to example.com in your /etc/hosts for testing</span>
+</pre></div>
+
+<p>This should be set to whatever canonical name you want to use to host this app.
+You can leave it as 'example.com' for testing purposes and create a record in
+your development machine's host file which links the IP address of your
+development server to example.com.</p>
+<p>We tell apache to use the configuration file in the tropo-voting-app
+repository, and we restart the apache server so all our changes are loaded:</p>
+<div class="highlight"><pre><a name="ubuntu-setup.sh-idio.html-45"></a><span class="c">#rm /etc/apache2/sites-available/default # uncomment to remove other vhosts</span>
+<a name="ubuntu-setup.sh-idio.html-46"></a><span class="nb">echo</span> <span class="s2">&quot;Include /var/www/tropo-voting-app/apache.conf&quot;</span> &gt;&gt; /etc/apache2/sites-available/default
+<a name="ubuntu-setup.sh-idio.html-47"></a>apachectl restart
+</pre></div>
+
+<p>As written, this will add another vhost record to the existing apache2 config.
+You can also uncomment the line that removes the sites-available/default file
+and then the only vhost will be the one specified here.</p>
+<p>That's it for our bash script! At this point you should be able to hit the canonical server name and, assuming you have DNS set up, you should see the app running.</p>
+<p>Here is the apache configuration file that has been activated:</p>
+<div class="highlight"><pre><a name="apache.conf-idio.html-1"></a><span class="c"># Apache config file to serve web.py app</span>
+<a name="apache.conf-idio.html-2"></a>
+<a name="apache.conf-idio.html-3"></a><span class="c"># This can be left in this location and added to apache config using Include directives</span>
+<a name="apache.conf-idio.html-4"></a><span class="c"># http://httpd.apache.org/docs/current/mod/core.html#include</span>
+<a name="apache.conf-idio.html-5"></a><span class="nt">&lt;VirtualHost</span> <span class="s">*:80</span><span class="nt">&gt;</span>
+<a name="apache.conf-idio.html-6"></a>    <span class="nb">ServerName</span> ${TROPO_VOTING_APP_SERVER_NAME}
+<a name="apache.conf-idio.html-7"></a>
+<a name="apache.conf-idio.html-8"></a>  <span class="nt">&lt;Directory</span> <span class="s">/</span><span class="nt">&gt;</span>
+<a name="apache.conf-idio.html-9"></a>      <span class="nb">Options</span> FollowSymLinks
+<a name="apache.conf-idio.html-10"></a>     <span class="nb">AllowOverride</span> <span class="k">None</span>
+<a name="apache.conf-idio.html-11"></a> <span class="nt">&lt;/Directory&gt;</span>
+<a name="apache.conf-idio.html-12"></a>
+<a name="apache.conf-idio.html-13"></a>    <span class="nt">&lt;IfModule</span> <span class="s">mod_rewrite.c</span><span class="nt">&gt;</span>
+<a name="apache.conf-idio.html-14"></a>      <span class="nb">RewriteEngine</span> <span class="k">on</span>
+<a name="apache.conf-idio.html-15"></a>
+<a name="apache.conf-idio.html-16"></a>      <span class="nb">RewriteLog</span> <span class="sx">/var/log/apache2/rewrite.log</span>
+<a name="apache.conf-idio.html-17"></a>      <span class="nb">RewriteLogLevel</span> <span class="m">5</span>
+<a name="apache.conf-idio.html-18"></a>
+<a name="apache.conf-idio.html-19"></a>      <span class="c"># exclude any static files</span>
+<a name="apache.conf-idio.html-20"></a>      <span class="nb">RewriteCond</span> %{REQUEST_URI} !^/css
+<a name="apache.conf-idio.html-21"></a>      <span class="nb">RewriteCond</span> %{REQUEST_URI} !^/docs
+<a name="apache.conf-idio.html-22"></a>      <span class="nb">RewriteCond</span> %{REQUEST_URI} !^/images
+<a name="apache.conf-idio.html-23"></a>      <span class="nb">RewriteCond</span> %{REQUEST_URI} !^/favicon.ico
+<a name="apache.conf-idio.html-24"></a>      <span class="nb">RewriteCond</span> %{REQUEST_URI} !^/script.py
+<a name="apache.conf-idio.html-25"></a>      <span class="nb">RewriteCond</span> %{REQUEST_URI} !^/voting.py
+<a name="apache.conf-idio.html-26"></a>      <span class="nb">RewriteRule</span> ^/(.*)$ <span class="sx">/voting.py/</span>$1
+<a name="apache.conf-idio.html-27"></a>    <span class="nt">&lt;/IfModule&gt;</span>
+<a name="apache.conf-idio.html-28"></a>
+<a name="apache.conf-idio.html-29"></a>    <span class="nb">DocumentRoot</span> <span class="sx">/var/www/tropo-voting-app/app</span>
+<a name="apache.conf-idio.html-30"></a>
+<a name="apache.conf-idio.html-31"></a> <span class="nt">&lt;Directory</span> <span class="s">/var/www/tropo-voting-app/app</span><span class="nt">&gt;</span>
+<a name="apache.conf-idio.html-32"></a>     <span class="nb">Options</span> Indexes FollowSymLinks MultiViews
+<a name="apache.conf-idio.html-33"></a>     <span class="nb">AllowOverride</span> <span class="k">None</span>
+<a name="apache.conf-idio.html-34"></a>     <span class="nb">Order</span> allow,deny
+<a name="apache.conf-idio.html-35"></a>     <span class="nb">allow</span> from <span class="k">all</span>
+<a name="apache.conf-idio.html-36"></a> <span class="nt">&lt;/Directory&gt;</span>
+<a name="apache.conf-idio.html-37"></a>
+<a name="apache.conf-idio.html-38"></a>    <span class="nt">&lt;Files</span> <span class="s">voting.py</span><span class="nt">&gt;</span>
+<a name="apache.conf-idio.html-39"></a>        <span class="nb">SetHandler</span> wsgi-script
+<a name="apache.conf-idio.html-40"></a>        <span class="nb">Options</span> ExecCGI FollowSymLinks
+<a name="apache.conf-idio.html-41"></a>    <span class="nt">&lt;/Files&gt;</span>
+<a name="apache.conf-idio.html-42"></a>
+<a name="apache.conf-idio.html-43"></a> <span class="c"># Possible values include: debug, info, notice, warn, error, crit,</span>
+<a name="apache.conf-idio.html-44"></a> <span class="c"># alert, emerg.</span>
+<a name="apache.conf-idio.html-45"></a> <span class="nb">LogLevel</span> <span class="k">debug</span>
+<a name="apache.conf-idio.html-46"></a>
+<a name="apache.conf-idio.html-47"></a> <span class="nb">ErrorLog</span> ${APACHE_LOG_DIR}/error-tropo-voting-app.log
+<a name="apache.conf-idio.html-48"></a> <span class="nb">CustomLog</span> ${APACHE_LOG_DIR}/access.log combined
+<a name="apache.conf-idio.html-49"></a><span class="nt">&lt;/VirtualHost&gt;</span>
+</pre></div>
+
+<h2 id="overview"><a class="toclink" href="#overview">Overview</a></h2>
 <p>A web application serves the python script which drives our call interface, and
 the web application also exposes voting results, counts votes and stores the
 available options. The web application supports both the tropo web api and
@@ -310,13 +467,13 @@ songs table:</p>
 <a name="data--schema.sql-pyg.html-29"></a><span class="p">);</span>
 </pre></div>
 
-<h2>Getting Started</h2>
-<h3>Scripting</h3>
+<h2 id="getting-started"><a class="toclink" href="#getting-started">Getting Started</a></h2>
+<h3 id="scripting"><a class="toclink" href="#scripting">Scripting</a></h3>
 <p>Our web application exposes a static python file which contains the script that
 will be used by the scripting api. We point the tropo application to the url of
 this script file.</p>
 <p>http://voice.pitchlift.org/script.py</p>
-<h3>WebAPI</h3>
+<h3 id="webapi"><a class="toclink" href="#webapi">WebAPI</a></h3>
 <p>We define a starting URL which we point our tropo application to. This method
 will interact only minimally with the user (maybe saying "hello"), but its
 primary object is to direct the call to the appropriate handler. This might
@@ -364,11 +521,11 @@ method points to rather than having to change the url in the tropo console.</p>
 <a name="app--voting_webapi.py-idio.html-168"></a>            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;unexpected caller channel </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">caller_channel</span><span class="p">)</span>
 </pre></div>
 
-<h2>Preparing the Menu: A List of Songs</h2>
+<h2 id="preparing-the-menu-a-list-of-songs"><a class="toclink" href="#preparing-the-menu-a-list-of-songs">Preparing the Menu: A List of Songs</a></h2>
 <p>The point of the application is to allow callers to vote on which of the
 available songs they would most like to hear. So, callers will first be
 presented with a list of the available songs.</p>
-<h3>Scripting</h3>
+<h3 id="scripting_1"><a class="toclink" href="#scripting_1">Scripting</a></h3>
 <p>Using the scripting interface, our script is run by the tropo instance so it
 doesn't have direct access to the database. We need to allow it to fetch a list
 of songs from our web application:</p>
@@ -413,7 +570,7 @@ information:</p>
 "Rocket Man by Elton John","rocket","3",""
 "Crazy Little Thing Called Love by Queen","crazy","4",""
 "Daydream Believer by The Monkees","daydream","5","3"
-"Sweet Caroline by Neil Diamond","caroline","6","1"
+"Sweet Caroline by Neil Diamond","caroline","6","2"
 "Hey Jude by The Beatles","jude","7",""
 "Don't Stop Believin by Journey","believing","8",""
 "Tainted Love by Soft Cell","tainted","9",""
@@ -435,7 +592,7 @@ and tells Tropo what the acceptable responses are:</p>
 <a name="app--script.py-idio.html-23"></a><span class="n">prompt</span> <span class="o">=</span> <span class="s">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">prompts</span><span class="p">)</span>
 </pre></div>
 
-<h3>Web API</h3>
+<h3 id="web-api"><a class="toclink" href="#web-api">Web API</a></h3>
 <p>Using the Tropo Web API, we have direct access to the database, so we prepare
 the prompt directly.</p>
 <div class="highlight"><pre><a name="app--voting_webapi.py-idio.html-93"></a>    <span class="k">def</span> <span class="nf">do_menu</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -454,8 +611,8 @@ the prompt directly.</p>
 <a name="app--voting_webapi.py-idio.html-106"></a>        <span class="k">return</span> <span class="n">t</span><span class="o">.</span><span class="n">RenderJson</span><span class="p">()</span>
 </pre></div>
 
-<h2>Voting</h2>
-<h3>Scripting</h3>
+<h2 id="voting"><a class="toclink" href="#voting">Voting</a></h2>
+<h3 id="scripting_2"><a class="toclink" href="#scripting_2">Scripting</a></h3>
 <p>In the scripting API, we greet the caller and play the menu prompt, capturing the result:</p>
 <div class="highlight"><pre><a name="app--script.py-idio.html-26"></a><span class="n">result</span> <span class="o">=</span> <span class="n">ask</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;choices&#39;</span> <span class="p">:</span> <span class="s">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">choices</span><span class="p">)</span> <span class="p">})</span>
 </pre></div>
@@ -466,8 +623,8 @@ the prompt directly.</p>
 <a name="app--script.py-idio.html-31"></a>    <span class="n">say</span><span class="p">(</span><span class="n">vote_response</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
 </pre></div>
 
-<h3>Web API</h3>
-<h2>Saving Vote</h2>
+<h3 id="web-api_1"><a class="toclink" href="#web-api_1">Web API</a></h3>
+<h2 id="saving-vote"><a class="toclink" href="#saving-vote">Saving Vote</a></h2>
 <p>The server page appends the vote to the database:</p>
 <div class="highlight"><pre><a name="app--voting_scripting.py-idio.html-17"></a><span class="k">class</span> <span class="nc">VoteScriptingController</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 <a name="app--voting_scripting.py-idio.html-18"></a>    <span class="k">def</span> <span class="nf">POST</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -508,15 +665,6 @@ the prompt directly.</p>
 </pre></div>
 
 <pre>
-<pre>
-Person calling from ananelson voted for Imagine by John Lennon (#2)
-Person calling from ananelson voted for Sweet Caroline by Neil Diamond (#6)
-Person calling from wchen_stanford voted for Daydream Believer by The Monkees (#5)
-Person calling from wchen_stanford voted for Daydream Believer by The Monkees (#5)
-Person calling from ananelson voted for Piano Man by Billy Joel (#1)
-Person calling from wchen_stanford voted for Daydream Believer by The Monkees (#5)
-Person calling from wchen_stanford voted for Piano Man by Billy Joel (#1)
-</pre>
 </pre>
 
 <p>The app's home page shows us the songs and current vote tally:</p>
@@ -524,57 +672,6 @@ Person calling from wchen_stanford voted for Piano Man by Billy Joel (#1)
 </pre></div>
 
 <pre>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
-    <head>
-        <meta http-equiv="Content-type" content="text/html" />
-        <title>Hey, Diggz, play my song!</title>
-        <link href="/css/style.css" type="text/css"rel="stylesheet" />
-        <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.2.min.js">
-        </script>
-        <script type="text/javascript">
-            function updater() {
-                $.ajax({
-                    url: '/results',
-                    success: function(data) {
-                       $('#results').html(data);
-                    },
-                    complete: function() {
-                       setTimeout(updater, 5000);
-                    }
-                })
-            };
-
-            $(document).ready(function() {
-                updater();
-            });
-        </script>
-    </head>
-    <body>
-        <div class="zp-wrapper">
-            <div class="zp-70 content">
-                <div class="padding">
-                    <p class="blue big">Hey, Diggz, play my song!</p>
-                    <p class="blue">Call this number to vote: +990009369996194333</p>
-                    <p class="blue">Current rankings:</p>
-                    <ul id="results">
-                        <li>Daydream Believer by The Monkees (3 votes)</li>
-<li>Piano Man by Billy Joel (2 votes)</li>
-<li>Imagine by John Lennon (1 votes)</li>
-<li>Sweet Caroline by Neil Diamond (1 votes)</li>
-<li>Rocket Man by Elton John (0 votes)</li>
-<li>Crazy Little Thing Called Love by Queen (0 votes)</li>
-<li>Hey Jude by The Beatles (0 votes)</li>
-<li>Don't Stop Believin by Journey (0 votes)</li>
-<li>Tainted Love by Soft Cell (0 votes)</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </body>
-</html>
-
 </pre>
         </div>
     </div>
