@@ -52,8 +52,6 @@ function updater() {
 
                 $(position_id).attr("class", direction);
             });
-
-            $("#updated").html(new Date().getTime());
             window.previous_data = results_json;
         },
         complete: function() {

@@ -7,7 +7,7 @@ CREATE TABLE songs (
 
 INSERT INTO songs (title, keyword, number) VALUES ("Piano Man by Billy Joel", "piano", 1);
 INSERT INTO songs (title, keyword, number) VALUES ("Imagine by John Lennon", "imagine", 2);
-INSERT INTO songs (title, keyword, number) VALUES ("Rocket Man by Elton John", "rocket", 3);
+INSERT INTO songs (title, keyword, number) VALUES ("Tiny Dancer by Elton John", "dancer", 3);
 INSERT INTO songs (title, keyword, number) VALUES ("Crazy Little Thing Called Love by Queen", "crazy", 4);
 INSERT INTO songs (title, keyword, number) VALUES ("Daydream Believer by The Monkees", "daydream", 5);
 INSERT INTO songs (title, keyword, number) VALUES ("Sweet Caroline by Neil Diamond", "caroline", 6);
