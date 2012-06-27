@@ -1,8 +1,20 @@
 {
-    "*.py|idio" : {},
-    "*.sql|pyg" : {},
-    "*.sh|pyg" : {},
-    "*.sh|idio" : {},
-    "apache.conf|idio" : { "idio" : { "lexer" : "apache" }},
-    "*.md|jinjajit|markdown|easyhtml" : { "markdown" : { "toc" : { "anchorlink" : true } }, "allinputs" : true }
+    "*.js|pyg": {},
+    "*.md|jinjajit|markdown|easyhtml": {
+        "allinputs": true,
+        "markdown": {
+            "toc": {
+                "anchorlink": true
+            }
+        }
+    },
+    "*.py|idio": {},
+    "*.sh|idio": {},
+    "*.sh|pyg": {},
+    "*.sql|pyg": {},
+    "apache.conf|idio": {
+        "idio": {
+            "lexer": "apache"
+        }
+    }
 }

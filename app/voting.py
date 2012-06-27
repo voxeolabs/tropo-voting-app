@@ -5,6 +5,7 @@ sys.path.append("..")
 os.chdir(abspath)
 
 import web
+import json
 
 import models.songs
 import models.votes
@@ -20,6 +21,7 @@ render = web.template.render('../templates/')
 
 urls = (
         '/results', 'ResultsController',
+        '/results.json', 'ResultsJsonController',
         '/songs.csv', 'SongsController',
         '/webapi/vote/(menu|response|confirm)', 'VoteWebapiController',
         '/webapi/vote/(confirm)/(.*)', 'VoteWebapiController',
@@ -34,19 +36,19 @@ def results_table():
     Make it so we can share code between ajax and vanilla versions of results table.
     """
     html = []
-    for title, votes in models.songs.results():
-        html.append("<li>%s (%s votes)</li>" % (title, votes))
+    for title, keyword, number, votes in models.songs.songs_array('votes_cache DESC'):
+        html.append("<li>%s (%s votes) - to vote say '%s' or press %s</li>" % (title, votes, keyword, number))
     return "\n".join(html)
 
 ### @export "index"
 class Index(object):
     def GET(self, name):
-        return render.index(VOTING_HOTLINE, results_table())
+        return render.index(VOTING_HOTLINE, models.songs.songs_dict('votes_cache DESC'))
 
-### @export "results"
-class ResultsController(object):
+### @export "results-json"
+class ResultsJsonController(object):
     def GET(self):
-        return results_table()
+        return json.dumps(models.songs.songs_dict('votes_cache DESC'))
 
 ### @export "votes"
 class Votes(object):

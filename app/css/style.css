@@ -26,6 +26,7 @@ footer, header, hgroup, menu, nav, section {
 body {
     line-height: 2;
     background-color: black;
+    font-family: "Balthazar", serif;
     color: white;
 }
 
@@ -60,13 +61,13 @@ p.blue {
 
 ul, ol {
     display: block;
-    margin-left: 200px;
-    margin-right: 200px;
+    margin-left: 100px;
+    margin-right: 100px;
 }
 
 li {
     color: #00FF00;
-    font-size: 120%;
+    font-size: 110%;
 }
 
 p.big {
@@ -77,5 +78,19 @@ p.small {
     margin-left: 0px;
     margin-right: 0px;
     font-size: 100%;
-    color: black;
+}
+
+.instructions {
+    color: gray;
+}
+
+.up {
+    background-color: green;
+}
+
+.down {
+    background-color: red;
+}
+
+.unchanged {
 }

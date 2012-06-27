@@ -5,24 +5,32 @@ import web
 # db path relative to app/ directory which will load this
 db = web.database(dbn='sqlite', db='../data/data.sqlite3')
 
+def songs_dict(order='number'):
+    """
+    Returns an array of songs with each song's info in a dict.
+    """
+    songs = []
+    position = 0
+    for row in db.select('songs', order=order):
+        songs.append({
+            'position' : position,
+            'title' : row['title'],
+            'keyword' : row['keyword'],
+            'number' : row['number'],
+            'votes' : row['votes_cache'] or 0
+        })
+        position += 1
+    return songs
+
 ### @export "songs-array"
-def songs_array():
+def songs_array(order='number'):
     """
     Returns an array of information for each song in the database.
     """
     songs = []
-    for row in db.select('songs', order='number'):
-        songs.append((row['title'], row['keyword'], row['number'], row['votes_cache']))
-    return songs
-
-def results():
-    """
-    Returns song titles and total votes sorted in order of voted preference.
-    """
-    songs = []
-    for row in db.select('songs', order='votes_cache DESC'):
+    for row in db.select('songs', order=order):
         votes = row['votes_cache'] or "0"
-        songs.append((row['title'], votes))
+        songs.append((row['title'], row['keyword'], row['number'], votes))
     return songs
 
 ### @export "cache-vote"
