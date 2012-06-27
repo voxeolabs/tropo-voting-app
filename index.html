@@ -272,8 +272,10 @@ Change widths as necessary
     <body>
     <div id="content">
         <div class="g3">
+<h2 id="table-of-contents"><a class="toclink" href="#table-of-contents">Table of Contents</a></h2>
 <div class="toc">
 <ul>
+<li><a href="#table-of-contents">Table of Contents</a></li>
 <li><a href="#system-setup-and-installation">System Setup and Installation</a></li>
 <li><a href="#overview">Overview</a></li>
 <li><a href="#getting-started">Getting Started</a><ul>
@@ -397,35 +399,36 @@ and then the only vhost will be the one specified here.</p>
 <a name="apache.conf-idio.html-17"></a>      <span class="nb">RewriteLogLevel</span> <span class="m">0</span>
 <a name="apache.conf-idio.html-18"></a>
 <a name="apache.conf-idio.html-19"></a>      <span class="nb">RewriteCond</span> %{REQUEST_URI} !^/css
-<a name="apache.conf-idio.html-20"></a>      <span class="nb">RewriteCond</span> %{REQUEST_URI} !^/js
-<a name="apache.conf-idio.html-21"></a>      <span class="nb">RewriteCond</span> %{REQUEST_URI} !^/images
-<a name="apache.conf-idio.html-22"></a>      <span class="nb">RewriteCond</span> %{REQUEST_URI} !^/favicon.ico
-<a name="apache.conf-idio.html-23"></a>      <span class="nb">RewriteCond</span> %{REQUEST_URI} !^/script.py
-<a name="apache.conf-idio.html-24"></a>      <span class="nb">RewriteCond</span> %{REQUEST_URI} !^/voting.py
-<a name="apache.conf-idio.html-25"></a>      <span class="nb">RewriteRule</span> ^/(.*)$ <span class="sx">/voting.py/</span>$1
-<a name="apache.conf-idio.html-26"></a>    <span class="nt">&lt;/IfModule&gt;</span>
-<a name="apache.conf-idio.html-27"></a>
-<a name="apache.conf-idio.html-28"></a>    <span class="nb">DocumentRoot</span> <span class="sx">/var/www/tropo-voting-app/app</span>
-<a name="apache.conf-idio.html-29"></a>
-<a name="apache.conf-idio.html-30"></a> <span class="nt">&lt;Directory</span> <span class="s">/var/www/tropo-voting-app/app</span><span class="nt">&gt;</span>
-<a name="apache.conf-idio.html-31"></a>     <span class="nb">Options</span> Indexes FollowSymLinks MultiViews
-<a name="apache.conf-idio.html-32"></a>     <span class="nb">AllowOverride</span> <span class="k">None</span>
-<a name="apache.conf-idio.html-33"></a>     <span class="nb">Order</span> allow,deny
-<a name="apache.conf-idio.html-34"></a>     <span class="nb">allow</span> from <span class="k">all</span>
-<a name="apache.conf-idio.html-35"></a> <span class="nt">&lt;/Directory&gt;</span>
-<a name="apache.conf-idio.html-36"></a>
-<a name="apache.conf-idio.html-37"></a>    <span class="nt">&lt;Files</span> <span class="s">voting.py</span><span class="nt">&gt;</span>
-<a name="apache.conf-idio.html-38"></a>        <span class="nb">SetHandler</span> wsgi-script
-<a name="apache.conf-idio.html-39"></a>        <span class="nb">Options</span> ExecCGI FollowSymLinks
-<a name="apache.conf-idio.html-40"></a>    <span class="nt">&lt;/Files&gt;</span>
-<a name="apache.conf-idio.html-41"></a>
-<a name="apache.conf-idio.html-42"></a> <span class="c"># Possible values include: debug, info, notice, warn, error, crit,</span>
-<a name="apache.conf-idio.html-43"></a> <span class="c"># alert, emerg.</span>
-<a name="apache.conf-idio.html-44"></a> <span class="nb">LogLevel</span> <span class="k">debug</span>
-<a name="apache.conf-idio.html-45"></a>
-<a name="apache.conf-idio.html-46"></a> <span class="nb">ErrorLog</span> ${APACHE_LOG_DIR}/error-tropo-voting-app.log
-<a name="apache.conf-idio.html-47"></a> <span class="nb">CustomLog</span> ${APACHE_LOG_DIR}/access.log combined
-<a name="apache.conf-idio.html-48"></a><span class="nt">&lt;/VirtualHost&gt;</span>
+<a name="apache.conf-idio.html-20"></a>      <span class="nb">RewriteCond</span> %{REQUEST_URI} !^/docs
+<a name="apache.conf-idio.html-21"></a>      <span class="nb">RewriteCond</span> %{REQUEST_URI} !^/js
+<a name="apache.conf-idio.html-22"></a>      <span class="nb">RewriteCond</span> %{REQUEST_URI} !^/images
+<a name="apache.conf-idio.html-23"></a>      <span class="nb">RewriteCond</span> %{REQUEST_URI} !^/favicon.ico
+<a name="apache.conf-idio.html-24"></a>      <span class="nb">RewriteCond</span> %{REQUEST_URI} !^/script.py
+<a name="apache.conf-idio.html-25"></a>      <span class="nb">RewriteCond</span> %{REQUEST_URI} !^/voting.py
+<a name="apache.conf-idio.html-26"></a>      <span class="nb">RewriteRule</span> ^/(.*)$ <span class="sx">/voting.py/</span>$1
+<a name="apache.conf-idio.html-27"></a>    <span class="nt">&lt;/IfModule&gt;</span>
+<a name="apache.conf-idio.html-28"></a>
+<a name="apache.conf-idio.html-29"></a>    <span class="nb">DocumentRoot</span> <span class="sx">/var/www/tropo-voting-app/app</span>
+<a name="apache.conf-idio.html-30"></a>
+<a name="apache.conf-idio.html-31"></a> <span class="nt">&lt;Directory</span> <span class="s">/var/www/tropo-voting-app/app</span><span class="nt">&gt;</span>
+<a name="apache.conf-idio.html-32"></a>     <span class="nb">Options</span> Indexes FollowSymLinks MultiViews
+<a name="apache.conf-idio.html-33"></a>     <span class="nb">AllowOverride</span> <span class="k">None</span>
+<a name="apache.conf-idio.html-34"></a>     <span class="nb">Order</span> allow,deny
+<a name="apache.conf-idio.html-35"></a>     <span class="nb">allow</span> from <span class="k">all</span>
+<a name="apache.conf-idio.html-36"></a> <span class="nt">&lt;/Directory&gt;</span>
+<a name="apache.conf-idio.html-37"></a>
+<a name="apache.conf-idio.html-38"></a>    <span class="nt">&lt;Files</span> <span class="s">voting.py</span><span class="nt">&gt;</span>
+<a name="apache.conf-idio.html-39"></a>        <span class="nb">SetHandler</span> wsgi-script
+<a name="apache.conf-idio.html-40"></a>        <span class="nb">Options</span> ExecCGI FollowSymLinks
+<a name="apache.conf-idio.html-41"></a>    <span class="nt">&lt;/Files&gt;</span>
+<a name="apache.conf-idio.html-42"></a>
+<a name="apache.conf-idio.html-43"></a> <span class="c"># Possible values include: debug, info, notice, warn, error, crit,</span>
+<a name="apache.conf-idio.html-44"></a> <span class="c"># alert, emerg.</span>
+<a name="apache.conf-idio.html-45"></a> <span class="nb">LogLevel</span> <span class="k">debug</span>
+<a name="apache.conf-idio.html-46"></a>
+<a name="apache.conf-idio.html-47"></a> <span class="nb">ErrorLog</span> ${APACHE_LOG_DIR}/error-tropo-voting-app.log
+<a name="apache.conf-idio.html-48"></a> <span class="nb">CustomLog</span> ${APACHE_LOG_DIR}/access.log combined
+<a name="apache.conf-idio.html-49"></a><span class="nt">&lt;/VirtualHost&gt;</span>
 </pre></div>
 
 <h2 id="overview"><a class="toclink" href="#overview">Overview</a></h2>
@@ -500,24 +503,26 @@ method points to rather than having to change the url in the tropo console.</p>
 <a name="app--voting_webapi.py-idio.html-148"></a>        <span class="k">return</span> <span class="n">t</span><span class="o">.</span><span class="n">RenderJson</span><span class="p">()</span>
 <a name="app--voting_webapi.py-idio.html-149"></a>
 <a name="app--voting_webapi.py-idio.html-150"></a>    <span class="k">def</span> <span class="nf">POST</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<a name="app--voting_webapi.py-idio.html-151"></a>        <span class="c"># save session info for this call</span>
-<a name="app--voting_webapi.py-idio.html-152"></a>        <span class="n">session_info</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">web</span><span class="o">.</span><span class="n">data</span><span class="p">())[</span><span class="s">&#39;session&#39;</span><span class="p">]</span>
-<a name="app--voting_webapi.py-idio.html-153"></a>
-<a name="app--voting_webapi.py-idio.html-154"></a>        <span class="n">tropo_call_id</span> <span class="o">=</span> <span class="n">session_info</span><span class="p">[</span><span class="s">&#39;callId&#39;</span><span class="p">]</span>
-<a name="app--voting_webapi.py-idio.html-155"></a>        <span class="n">caller_network</span> <span class="o">=</span> <span class="n">session_info</span><span class="p">[</span><span class="s">&#39;from&#39;</span><span class="p">][</span><span class="s">&#39;network&#39;</span><span class="p">]</span>
-<a name="app--voting_webapi.py-idio.html-156"></a>        <span class="n">caller_channel</span> <span class="o">=</span> <span class="n">session_info</span><span class="p">[</span><span class="s">&#39;from&#39;</span><span class="p">][</span><span class="s">&#39;channel&#39;</span><span class="p">]</span>
-<a name="app--voting_webapi.py-idio.html-157"></a>        <span class="n">caller_id</span> <span class="o">=</span> <span class="n">session_info</span><span class="p">[</span><span class="s">&#39;from&#39;</span><span class="p">][</span><span class="s">&#39;id&#39;</span><span class="p">]</span>
-<a name="app--voting_webapi.py-idio.html-158"></a>
-<a name="app--voting_webapi.py-idio.html-159"></a>        <span class="n">models</span><span class="o">.</span><span class="n">sessions</span><span class="o">.</span><span class="n">new_session</span><span class="p">(</span>
-<a name="app--voting_webapi.py-idio.html-160"></a>                <span class="n">tropo_call_id</span><span class="p">,</span>
-<a name="app--voting_webapi.py-idio.html-161"></a>                <span class="n">caller_network</span><span class="p">,</span>
-<a name="app--voting_webapi.py-idio.html-162"></a>                <span class="n">caller_channel</span><span class="p">,</span>
-<a name="app--voting_webapi.py-idio.html-163"></a>                <span class="n">caller_id</span><span class="p">)</span>
-<a name="app--voting_webapi.py-idio.html-164"></a>
-<a name="app--voting_webapi.py-idio.html-165"></a>        <span class="k">if</span> <span class="n">caller_channel</span> <span class="o">==</span> <span class="s">&#39;VOICE&#39;</span><span class="p">:</span>
-<a name="app--voting_webapi.py-idio.html-166"></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_voice</span><span class="p">()</span>
-<a name="app--voting_webapi.py-idio.html-167"></a>        <span class="k">else</span><span class="p">:</span>
-<a name="app--voting_webapi.py-idio.html-168"></a>            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;unexpected caller channel </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">caller_channel</span><span class="p">)</span>
+<a name="app--voting_webapi.py-idio.html-151"></a>        <span class="n">web</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">web</span><span class="o">.</span><span class="n">data</span><span class="p">())</span>
+<a name="app--voting_webapi.py-idio.html-152"></a>
+<a name="app--voting_webapi.py-idio.html-153"></a>        <span class="c"># save session info for this call</span>
+<a name="app--voting_webapi.py-idio.html-154"></a>        <span class="n">session_info</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">web</span><span class="o">.</span><span class="n">data</span><span class="p">())[</span><span class="s">&#39;session&#39;</span><span class="p">]</span>
+<a name="app--voting_webapi.py-idio.html-155"></a>
+<a name="app--voting_webapi.py-idio.html-156"></a>        <span class="n">tropo_call_id</span> <span class="o">=</span> <span class="n">session_info</span><span class="p">[</span><span class="s">&#39;callId&#39;</span><span class="p">]</span>
+<a name="app--voting_webapi.py-idio.html-157"></a>        <span class="n">caller_network</span> <span class="o">=</span> <span class="n">session_info</span><span class="p">[</span><span class="s">&#39;from&#39;</span><span class="p">][</span><span class="s">&#39;network&#39;</span><span class="p">]</span>
+<a name="app--voting_webapi.py-idio.html-158"></a>        <span class="n">caller_channel</span> <span class="o">=</span> <span class="n">session_info</span><span class="p">[</span><span class="s">&#39;from&#39;</span><span class="p">][</span><span class="s">&#39;channel&#39;</span><span class="p">]</span>
+<a name="app--voting_webapi.py-idio.html-159"></a>        <span class="n">caller_id</span> <span class="o">=</span> <span class="n">session_info</span><span class="p">[</span><span class="s">&#39;from&#39;</span><span class="p">][</span><span class="s">&#39;id&#39;</span><span class="p">]</span>
+<a name="app--voting_webapi.py-idio.html-160"></a>
+<a name="app--voting_webapi.py-idio.html-161"></a>        <span class="n">models</span><span class="o">.</span><span class="n">sessions</span><span class="o">.</span><span class="n">new_session</span><span class="p">(</span>
+<a name="app--voting_webapi.py-idio.html-162"></a>                <span class="n">tropo_call_id</span><span class="p">,</span>
+<a name="app--voting_webapi.py-idio.html-163"></a>                <span class="n">caller_network</span><span class="p">,</span>
+<a name="app--voting_webapi.py-idio.html-164"></a>                <span class="n">caller_channel</span><span class="p">,</span>
+<a name="app--voting_webapi.py-idio.html-165"></a>                <span class="n">caller_id</span><span class="p">)</span>
+<a name="app--voting_webapi.py-idio.html-166"></a>
+<a name="app--voting_webapi.py-idio.html-167"></a>        <span class="k">if</span> <span class="n">caller_channel</span> <span class="o">==</span> <span class="s">&#39;VOICE&#39;</span><span class="p">:</span>
+<a name="app--voting_webapi.py-idio.html-168"></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_voice</span><span class="p">()</span>
+<a name="app--voting_webapi.py-idio.html-169"></a>        <span class="k">else</span><span class="p">:</span>
+<a name="app--voting_webapi.py-idio.html-170"></a>            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;unexpected caller channel </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">caller_channel</span><span class="p">)</span>
 </pre></div>
 
 <h2 id="preparing-the-menu-a-list-of-songs"><a class="toclink" href="#preparing-the-menu-a-list-of-songs">Preparing the Menu: A List of Songs</a></h2>
@@ -530,15 +535,15 @@ doesn't have direct access to the database. We need to allow it to fetch a list
 of songs from our web application:</p>
 <p>Here we see a method in the songs model which returns an array of song
 information:</p>
-<div class="highlight"><pre><a name="models--songs.py-idio.html-9"></a><span class="k">def</span> <span class="nf">songs_array</span><span class="p">(</span><span class="n">order</span><span class="o">=</span><span class="s">&#39;number&#39;</span><span class="p">):</span>
-<a name="models--songs.py-idio.html-10"></a>    <span class="sd">&quot;&quot;&quot;</span>
-<a name="models--songs.py-idio.html-11"></a><span class="sd">    Returns an array of information for each song in the database.</span>
-<a name="models--songs.py-idio.html-12"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a name="models--songs.py-idio.html-13"></a>    <span class="n">songs</span> <span class="o">=</span> <span class="p">[]</span>
-<a name="models--songs.py-idio.html-14"></a>    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">db</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s">&#39;songs&#39;</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="n">order</span><span class="p">):</span>
-<a name="models--songs.py-idio.html-15"></a>        <span class="n">votes</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s">&#39;votes_cache&#39;</span><span class="p">]</span> <span class="ow">or</span> <span class="s">&quot;0&quot;</span>
-<a name="models--songs.py-idio.html-16"></a>        <span class="n">songs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">row</span><span class="p">[</span><span class="s">&#39;title&#39;</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s">&#39;keyword&#39;</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s">&#39;number&#39;</span><span class="p">],</span> <span class="n">votes</span><span class="p">))</span>
-<a name="models--songs.py-idio.html-17"></a>    <span class="k">return</span> <span class="n">songs</span>
+<div class="highlight"><pre><a name="models--songs.py-idio.html-26"></a><span class="k">def</span> <span class="nf">songs_array</span><span class="p">(</span><span class="n">order</span><span class="o">=</span><span class="s">&#39;number&#39;</span><span class="p">):</span>
+<a name="models--songs.py-idio.html-27"></a>    <span class="sd">&quot;&quot;&quot;</span>
+<a name="models--songs.py-idio.html-28"></a><span class="sd">    Returns an array of information for each song in the database.</span>
+<a name="models--songs.py-idio.html-29"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a name="models--songs.py-idio.html-30"></a>    <span class="n">songs</span> <span class="o">=</span> <span class="p">[]</span>
+<a name="models--songs.py-idio.html-31"></a>    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">db</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s">&#39;songs&#39;</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="n">order</span><span class="p">):</span>
+<a name="models--songs.py-idio.html-32"></a>        <span class="n">votes</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s">&#39;votes_cache&#39;</span><span class="p">]</span> <span class="ow">or</span> <span class="s">&quot;0&quot;</span>
+<a name="models--songs.py-idio.html-33"></a>        <span class="n">songs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">row</span><span class="p">[</span><span class="s">&#39;title&#39;</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s">&#39;keyword&#39;</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s">&#39;number&#39;</span><span class="p">],</span> <span class="n">votes</span><span class="p">))</span>
+<a name="models--songs.py-idio.html-34"></a>    <span class="k">return</span> <span class="n">songs</span>
 </pre></div>
 
 <p>We expose the available songs as a simple CSV listing:</p>
@@ -640,14 +645,14 @@ the prompt directly.</p>
 <a name="models--votes.py-idio.html-39"></a>    <span class="k">return</span> <span class="n">song_number</span>
 </pre></div>
 
-<div class="highlight"><pre><a name="models--songs.py-idio.html-20"></a><span class="k">def</span> <span class="nf">cache_vote</span><span class="p">(</span><span class="n">number</span><span class="p">):</span>
-<a name="models--songs.py-idio.html-21"></a>    <span class="sd">&quot;&quot;&quot;</span>
-<a name="models--songs.py-idio.html-22"></a><span class="sd">    Increments the cached votes for this song.</span>
-<a name="models--songs.py-idio.html-23"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a name="models--songs.py-idio.html-24"></a>    <span class="n">previous_votes_cache</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s">&quot;songs&quot;</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="s">&quot;number=$number&quot;</span><span class="p">,</span> <span class="nb">vars</span><span class="o">=</span><span class="nb">locals</span><span class="p">())[</span><span class="mi">0</span><span class="p">][</span><span class="s">&#39;votes_cache&#39;</span><span class="p">]</span>
-<a name="models--songs.py-idio.html-25"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">previous_votes_cache</span><span class="p">:</span>
-<a name="models--songs.py-idio.html-26"></a>        <span class="n">previous_votes_cache</span> <span class="o">=</span> <span class="mi">0</span>
-<a name="models--songs.py-idio.html-27"></a>    <span class="n">db</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="s">&quot;songs&quot;</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="s">&quot;number=$number&quot;</span><span class="p">,</span> <span class="n">votes_cache</span><span class="o">=</span><span class="n">previous_votes_cache</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="nb">vars</span><span class="o">=</span><span class="nb">locals</span><span class="p">())</span>
+<div class="highlight"><pre><a name="models--songs.py-idio.html-37"></a><span class="k">def</span> <span class="nf">cache_vote</span><span class="p">(</span><span class="n">number</span><span class="p">):</span>
+<a name="models--songs.py-idio.html-38"></a>    <span class="sd">&quot;&quot;&quot;</span>
+<a name="models--songs.py-idio.html-39"></a><span class="sd">    Increments the cached votes for this song.</span>
+<a name="models--songs.py-idio.html-40"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a name="models--songs.py-idio.html-41"></a>    <span class="n">previous_votes_cache</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s">&quot;songs&quot;</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="s">&quot;number=$number&quot;</span><span class="p">,</span> <span class="nb">vars</span><span class="o">=</span><span class="nb">locals</span><span class="p">())[</span><span class="mi">0</span><span class="p">][</span><span class="s">&#39;votes_cache&#39;</span><span class="p">]</span>
+<a name="models--songs.py-idio.html-42"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">previous_votes_cache</span><span class="p">:</span>
+<a name="models--songs.py-idio.html-43"></a>        <span class="n">previous_votes_cache</span> <span class="o">=</span> <span class="mi">0</span>
+<a name="models--songs.py-idio.html-44"></a>    <span class="n">db</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="s">&quot;songs&quot;</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="s">&quot;number=$number&quot;</span><span class="p">,</span> <span class="n">votes_cache</span><span class="o">=</span><span class="n">previous_votes_cache</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="nb">vars</span><span class="o">=</span><span class="nb">locals</span><span class="p">())</span>
 </pre></div>
 
 <p>We can view individual votes for debugging (to be removed):</p>
