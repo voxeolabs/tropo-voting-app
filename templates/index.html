@@ -1,4 +1,4 @@
-﻿$def with (voting_hotline, results_table)
+﻿$def with (voting_hotline, songs_dict)
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
@@ -17,8 +17,12 @@
         <p class="blue">Call this number to vote: $voting_hotline</p>
         <p class="blue">Current rankings:</p>
         <ul id="results">
-            $:results_table
-        </ul>
+            $for i, d in enumerate(songs_dict):
+              <li id="position-${d['position']}" keyword="${d['keyword']}">
+                  ${d['title']} (${d['votes']} votes) <span class="instructions">${"to vote" if i==0 else ""} say '${d['keyword']}' or press ${d['number']}</span>
+              </li>
+          </ul>
+          <p id="updated">updated</p>
         <div style="padding-top: 100px;">
             <p class="small">Voting Powered By</p>
             <p class="small"><img width="300px" alt="tropo logo" src="/images/tropo-white.png" /></p>

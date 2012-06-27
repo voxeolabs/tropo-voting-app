@@ -5,6 +5,23 @@ import web
 # db path relative to app/ directory which will load this
 db = web.database(dbn='sqlite', db='../data/data.sqlite3')
 
+def songs_dict(order='number'):
+    """
+    Returns an array of songs with each song's info in a dict.
+    """
+    songs = []
+    position = 0
+    for row in db.select('songs', order=order):
+        songs.append({
+            'position' : position,
+            'title' : row['title'],
+            'keyword' : row['keyword'],
+            'number' : row['number'],
+            'votes' : row['votes_cache'] or 0
+        })
+        position += 1
+    return songs
+
 ### @export "songs-array"
 def songs_array(order='number'):
     """

@@ -1,3 +1,5 @@
+## Table of Contents
+
 [TOC]
 
 ## System Setup and Installation

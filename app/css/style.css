@@ -79,3 +79,18 @@ p.small {
     margin-right: 0px;
     font-size: 100%;
 }
+
+.instructions {
+    color: gray;
+}
+
+.up {
+    background-color: green;
+}
+
+.down {
+    background-color: red;
+}
+
+.unchanged {
+}
