@@ -9,6 +9,7 @@ import json
 
 import models.songs
 import models.votes
+import webpyutils
 
 from voting_webapi import VoteWebapiController
 from voting_webapi import StartWebapiController
@@ -20,7 +21,6 @@ VOTING_HOTLINE="+990009369996194333"
 render = web.template.render('../templates/')
 
 urls = (
-        '/results', 'ResultsController',
         '/results.json', 'ResultsJsonController',
         '/songs.csv', 'SongsController',
         '/webapi/vote/(menu|response|confirm)', 'VoteWebapiController',
@@ -63,5 +63,22 @@ class Votes(object):
         return "\n".join(html)
 
 ### @export "start-app"
-app = web.application(urls, globals())
-application = app.wsgifunc()
+if __name__ == '__main__':
+
+    app = web.application(urls, globals())
+
+    if os.environ.has_key('PORT'):
+        port = int(os.environ['PORT'])
+    else:
+        port = 8080
+
+    server_address =("0.0.0.0", port)
+
+    func = app.wsgifunc()
+    func = webpyutils.StaticMiddleware(func)
+
+    server = web.httpserver.WSGIServer(server_address, func)
+    try:
+         server.start()
+    except KeyboardInterrupt:
+         server.stop()
