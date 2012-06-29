@@ -21,33 +21,24 @@ render = web.template.render('../templates/')
 
 urls = (
         '/results.json', 'ResultsJsonController',
-        '/songs.csv', 'SongsController',
-        '/webapi/vote/(menu|response|confirm)', 'VoteWebapiController',
-        '/webapi/vote/(confirm)/(.*)', 'VoteWebapiController',
-        '/webapi/start', 'StartWebapiController',
         '/scripting/vote', 'VoteScriptingController',
+        '/songs.csv', 'SongsController',
         '/votes', 'Votes',
-        '/(.*)', 'Index'
+        '/webapi/start', 'StartWebapiController',
+        '/webapi/vote/(confirm)/(.*)', 'VoteWebapiController',
+        '/webapi/vote/(menu|response|confirm)', 'VoteWebapiController',
+        '/', 'Index'
         )
-
-def results_table():
-    """
-    Make it so we can share code between ajax and vanilla versions of results table.
-    """
-    html = []
-    for title, keyword, number, votes in models.songs.songs_array('votes_cache DESC'):
-        html.append("<li>%s (%s votes) - to vote say '%s' or press %s</li>" % (title, votes, keyword, number))
-    return "\n".join(html)
 
 ### @export "index"
 class Index(object):
     def GET(self, name):
-        return render.index(VOTING_HOTLINE, models.songs.songs_dict('votes_cache DESC'))
+        return render.index(VOTING_HOTLINE, models.songs.songs_dict('votes_cache'))
 
 ### @export "results-json"
 class ResultsJsonController(object):
     def GET(self):
-        return json.dumps(models.songs.songs_dict('votes_cache DESC'))
+        return json.dumps(models.songs.songs_dict('votes_cache'))
 
 ### @export "votes"
 class Votes(object):
