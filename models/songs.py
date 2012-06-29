@@ -1,8 +1,6 @@
 ### @export "imports"
+from models.db import db
 import web
-
-### @export "db"
-db = web.database(dbn='postgres', host='localhost',  db='voting')
 
 def songs_dict(order='number'):
     """

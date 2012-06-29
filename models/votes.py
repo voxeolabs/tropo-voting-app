@@ -2,8 +2,7 @@ import web
 import re
 import models.songs
 from models.sessions import session_info
-
-db = web.database(dbn='postgres', host='localhost',  db='voting')
+from models.db import db
 
 def caller_id_if_valid(tropo_call_id):
     session = session_info(tropo_call_id)
