@@ -2,7 +2,7 @@ from models.db import db
 
 def setup_db():
     db.query("CREATE TABLE songs (number integer PRIMARY KEY, title varchar(100), keyword varchar(50), votes_cache integer)")
-    db.query("CREATE TABLE votes (id integer PRIMARY KEY DEFAULT nextval('serial'), song_number integer, phone_number varchar(50)")
+    db.query("CREATE TABLE votes (id integer PRIMARY KEY DEFAULT nextval('serial'), song_number integer, phone_number varchar(50))")
     db.query("CREATE TABLE sessions (tropo_call_id varchar(100), caller_network varchar(20), caller_channel varchar(20), caller_id varchar(50))")
 
     db.query("""INSERT INTO songs (title, keyword, number) VALUES ("Piano Man by Billy Joel", "piano", 1);""")
