@@ -15,4 +15,4 @@ def reset_db():
     db.query("DROP SCHEMA public CASCADE")
 
 db = parse_db_url()
-initialize_db()
+reset_db()
