@@ -12,7 +12,7 @@ def initialize_db():
     db.query("CREATE TABLE songs (number integer PRIMARY KEY)")
 
 def reset_db():
-    db.query("DROP SCHEMA public CASCADE")
+    db.query("DROP TABLE songs")
 
 db = parse_db_url()
 reset_db()
