@@ -15,7 +15,7 @@ from voting_webapi import StartWebapiController
 from voting_scripting import VoteScriptingController
 from voting_scripting import SongsController
 
-VOTING_HOTLINE="+990009369996194333"
+VOTING_HOTLINE="+49 (0) 30 3080 8581"
 
 render = web.template.render('../templates/')
 
