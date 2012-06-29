@@ -9,7 +9,6 @@ import json
 
 import models.songs
 import models.votes
-import webpyutils
 
 from voting_webapi import VoteWebapiController
 from voting_webapi import StartWebapiController
@@ -75,7 +74,6 @@ if __name__ == '__main__':
     server_address =("0.0.0.0", port)
 
     func = app.wsgifunc()
-    func = webpyutils.StaticMiddleware(func)
 
     server = web.httpserver.WSGIServer(server_address, func)
     try:
