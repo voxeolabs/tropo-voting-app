@@ -12,7 +12,7 @@ def setup_db():
     db.query("INSERT INTO songs (title, keyword, number) VALUES ('Daydream Believer by The Monkees', 'daydream', 5);")
     db.query("INSERT INTO songs (title, keyword, number) VALUES ('Sweet Caroline by Neil Diamond', 'caroline', 6);")
     db.query("INSERT INTO songs (title, keyword, number) VALUES ('Hey Jude by The Beatles', 'jude', 7);")
-    db.query("INSERT INTO songs (title, keyword, number) VALUES ('Don\'t Stop Believin by Journey', 'believing', 8);")
+    db.query("INSERT INTO songs (title, keyword, number) VALUES ('Don\\'t Stop Believin by Journey', 'believing', 8);")
     db.query("INSERT INTO songs (title, keyword, number) VALUES ('Tainted Love by Soft Cell', 'tainted', 9);")
 
 setup_db()
