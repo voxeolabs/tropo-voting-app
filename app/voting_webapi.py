@@ -147,6 +147,9 @@ class StartWebapiController(BaseWebapiController):
 
         return t.RenderJson()
 
+    def GET(self):
+       return "<p>This method isn't that interesting unless tropo is calling it.</p>"
+
     def POST(self):
         web.debug(web.data())
 
