@@ -32,7 +32,7 @@ urls = (
 
 ### @export "index"
 class Index(object):
-    def GET(self, name):
+    def GET(self):
         return render.index(VOTING_HOTLINE, models.songs.songs_dict('votes_cache'))
 
 ### @export "results-json"
