@@ -9,7 +9,7 @@ def parse_db_url():
     return web.database(dbn='postgres', host=params['HOST'], db=params['NAME'], user=params['USER'], pw=params['PASSWORD'])
 
 def initialize_db():
-    db.query("CREATE TABLE songs (number integer PRIMARY KEY")
+    db.query("CREATE TABLE songs (number integer PRIMARY KEY)")
 
 def reset_db():
     db.query("DROP SCHEMA public CASCADE")
