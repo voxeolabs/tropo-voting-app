@@ -74,6 +74,7 @@ if __name__ == '__main__':
     server_address =("0.0.0.0", port)
 
     func = app.wsgifunc()
+    func = web.httpserver.StaticMiddleware(func)
 
     server = web.httpserver.WSGIServer(server_address, func)
     try:
