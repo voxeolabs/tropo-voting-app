@@ -1,6 +1,6 @@
 import web
 
-db = web.database(dbn='sqlite', db='../data/data.sqlite3')
+db = web.database(dbn='postgres', host='localhost',  db='voting')
 
 def new_session(tropo_call_id, caller_network, caller_channel, caller_id):
     db.insert('sessions', **locals())

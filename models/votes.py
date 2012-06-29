@@ -3,8 +3,7 @@ import re
 import models.songs
 from models.sessions import session_info
 
-# db path relative to app/ directory which will load this
-db = web.database(dbn='sqlite', db='../data/data.sqlite3')
+db = web.database(dbn='postgres', host='localhost',  db='voting')
 
 def caller_id_if_valid(tropo_call_id):
     session = session_info(tropo_call_id)

@@ -2,8 +2,7 @@
 import web
 
 ### @export "db"
-# db path relative to app/ directory which will load this
-db = web.database(dbn='sqlite', db='../data/data.sqlite3')
+db = web.database(dbn='postgres', host='localhost',  db='voting')
 
 def songs_dict(order='number'):
     """
