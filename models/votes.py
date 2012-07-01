@@ -8,7 +8,11 @@ def caller_id_if_valid(tropo_call_id):
     session = session_info(tropo_call_id)
     is_skype = session['caller_network'] in ('SKYPE')
     is_numeric_phone_channel = session['caller_network'] in ('SIP', 'SMS')
-    is_number = re.match("^(\+)?[0-9]+$", session['caller_id'])
+    if session['caller_id']:
+        is_number = re.match("^(\+)?[0-9]+$", session['caller_id'])
+    else:
+        is_number = False
+
     if (is_numeric_phone_channel and is_number) or is_skype:
         return session['caller_id']
     else:
