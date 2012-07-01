@@ -8,11 +8,7 @@ def caller_id_if_valid(tropo_call_id):
     session = session_info(tropo_call_id)
     is_skype = session['caller_network'] in ('SKYPE')
     is_numeric_phone_channel = session['caller_network'] in ('SIP', 'SMS')
-    try:
-        is_number = re.match("^(\+)?[0-9]+$", session['caller_id'])
-    except TypeError as e:
-        web.debug("Caller id was '%s'" % session['caller_id'])
-        is_number = False
+    is_number = re.match("^(\+)?[0-9]+$", session['caller_id'])
 
     if (is_numeric_phone_channel and is_number) or is_skype:
         return session['caller_id']
@@ -22,8 +18,8 @@ def caller_id_if_valid(tropo_call_id):
         return None
 
 def caller_id_can_vote(caller_id):
-    is_number = re.match("^(\+)?[0-9]+$", caller_id)
     if caller_id:
+        is_number = re.match("^(\+)?[0-9]+$", caller_id)
         return count_votes_by_caller_id(caller_id) == 0 or not is_number
     else:
         return False
