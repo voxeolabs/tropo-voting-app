@@ -22,7 +22,7 @@ def caller_id_can_vote(caller_id):
         is_number = re.match("^(\+)?[0-9]+$", caller_id)
         return count_votes_by_caller_id(caller_id) == 0 or not is_number
     else:
-        return False
+        return True
 
 def count_votes_by_caller_id(caller_id):
     results = db.query("SELECT COUNT(*) as count_votes from votes WHERE phone_number=$caller_id", vars=locals())
