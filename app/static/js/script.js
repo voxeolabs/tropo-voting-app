@@ -79,6 +79,7 @@ $(document).ready(function() {
     updater();
     $("#counter").flipCounter({
         imagePath : "/static/js/flipCounter-medium.png",
-        easing: jQuery.easing.easeOutCubic
+        easing: jQuery.easing.easeOutCubic,
+        duration: 5000
     });
 });
