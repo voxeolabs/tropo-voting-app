@@ -18,7 +18,7 @@
         <ul id="results">
             $for i, d in enumerate(songs_dict):
             <li class="scoreboard" id="position-${d['position']}" keyword="${d['keyword']}">
-            ${d['title']} (${d['votes']} votes) <span class="instructions">${"to vote" if i==0 else ""} say '${d['keyword']}' or press ${d['number']}</span>
+            ${d['title']} (${d['votes']} votes) <span class="instructions">press ${d['number']}</span>
             </li>
         </ul>
         <div style="padding-top: 20px;">

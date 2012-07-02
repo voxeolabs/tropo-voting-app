@@ -95,7 +95,9 @@ p.left {
 	font-size: 110%;
 	font-weight: normal;
 	font-style: italic;
-    color: white;
+	border-style: solid 1px white;
+	background-color: orange;
+    color: black;
 }
 
 .direction {
