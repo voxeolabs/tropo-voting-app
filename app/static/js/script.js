@@ -34,11 +34,6 @@ function updater() {
                     }
                 }
 
-                var instructions = "";
-                if (position == 0) {
-                    instructions = "to vote ";
-                }
-
                 var direction;
                 if (position > previous_position) {
                     direction = "&darr;";
@@ -52,7 +47,7 @@ function updater() {
                     throw "stop";
                 }
 
-                instructions = instructions += "say '" + item["keyword"] + "' or press " + item["number"];
+                var instructions = "press " + item["number"];
                 $(position_id).html('<span class="direction">' + direction + "</span> " + item['title'] + " (" + item["votes"] + " votes) " + '<span class="instructions">' + instructions +  '</span>');
                 $(position_id).attr("keyword", item["keyword"]);
 
