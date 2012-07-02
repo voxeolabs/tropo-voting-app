@@ -68,6 +68,7 @@ ul, ol {
 li {
     color: #00FF00;
     font-size: 110%;
+    line-height: 110%;
 }
 
 p.big {
@@ -85,7 +86,7 @@ p.small {
 }
 
 .direction {
-    font-size: 40px;
+    font-size: 30px;
     font-weight: bold;
 }
 
