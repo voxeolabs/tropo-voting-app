@@ -17,6 +17,7 @@ function updater() {
 
             /// @export "iterate-records"
             var position = -1;
+            var total_votes = 0;
             results_json.forEach(function(item) {
 
                 /// @export "increment-position"
@@ -51,8 +52,11 @@ function updater() {
                 }
 
                 $(position_id).attr("class", direction);
+                total_votes = total_votes + item["votes"]
             });
             window.previous_data = results_json;
+
+            $("#counter").flipCounter("setNumber", total_votes);
         },
         complete: function() {
             setTimeout(updater, 1250);

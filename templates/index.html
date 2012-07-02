@@ -20,10 +20,10 @@
             ${d['title']} (${d['votes']} votes) <span class="instructions">${"to vote" if i==0 else ""} say '${d['keyword']}' or press ${d['number']}</span>
             </li>
         </ul>
-        <div id="counter"><input type="hidden" name="counter-value" value="100" /></div>
-<div style="padding-top: 100px;">
-    <p class="small">Voting Powered By</p>
-    <p class="small"><img width="300px" alt="tropo logo" src="/static/images/tropo-white.png" /></p>
-</div>
+        <div id="counter"><input type="hidden" id="counter-value" value="0" /> votes</div>
+        <div style="padding-top: 50px;">
+            <p class="small">Voting Powered By</p>
+            <p class="small"><img width="300px" alt="tropo logo" src="/static/images/tropo-white.png" /></p>
+        </div>
     </body>
 </html>
