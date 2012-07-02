@@ -14,7 +14,7 @@ def songs_dict(order='number'):
             'title' : row['title'],
             'keyword' : row['keyword'],
             'number' : row['number'],
-            'votes' : row['votes_cache'] or 0
+            'votes' : row['votes_cache']
         })
         position += 1
     return songs
@@ -26,7 +26,7 @@ def songs_array(order='number'):
     """
     songs = []
     for row in db.select('songs', order=order):
-        votes = row['votes_cache'] or "0"
+        votes = row['votes_cache']
         songs.append((row['title'], row['keyword'], row['number'], votes))
     return songs
 
