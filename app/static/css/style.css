@@ -66,7 +66,7 @@ ul, ol {
 }
 
 li {
-    color: #00FF00;
+    color: white;
     font-size: 110%;
     line-height: 175%;
 }
@@ -91,7 +91,7 @@ p.left {
 }
 
 .instructions {
-    color: gray;
+    color: white;
 }
 
 .direction {
