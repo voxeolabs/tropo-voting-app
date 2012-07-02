@@ -67,7 +67,8 @@ ul, ol {
 
 li {
     color: white;
-    font-size: 110%;
+    font-size: 130%;
+    font-weight: bold;
     line-height: 175%;
 }
 
