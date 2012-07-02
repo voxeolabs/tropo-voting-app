@@ -94,6 +94,7 @@ p.left {
 .instructions {
 	font-size: 110%;
 	font-weight: normal;
+	font-style: italic;
     color: white;
 }
 
