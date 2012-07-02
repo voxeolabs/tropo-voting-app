@@ -20,9 +20,14 @@
             ${d['title']} (${d['votes']} votes) <span class="instructions">press ${d['number']}</span>
             </li>
         </ul>
-        <div style="padding-top: 20px;">
-            <div id="counter"><input type="hidden" id="counter-value" value="0" /></div>
-            <p class="small">votes powered by <img width="300px" alt="tropo logo" src="/static/images/tropo-white.png" /></p>
+        <div style="padding-top: 20px; text-align:center;">
+            <div id="counter" style="display:inline-block;position:relative; top: -8px !important;">
+				<input type="hidden" id="counter-value" value="0" />
+			</div>
+			<div style="display:inline; font-size:150%;"> VOTES!  -  Powered by</div>			
+			<span style="display:inline-block;vertical-align:middle;">
+				<img width="300px" alt="tropo logo" src="/static/images/tropo-white.png">
+			</span>
         </div>
     </body>
 </html>
