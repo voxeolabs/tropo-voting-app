@@ -47,8 +47,10 @@ function updater() {
                     direction = "down";
                 } else if (position < previous_position) {
                     direction = "up";
+                } else if (window.previous_data[i]["votes"] > results_json["votes"]) {
+                    direction = "unchanged"
                 } else {
-                    direction = "unchanged";
+                    direction = "none";
                 }
 
                 $(position_id).attr("class", direction);
