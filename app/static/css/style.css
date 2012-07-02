@@ -86,7 +86,8 @@ p.small {
 }
 
 .direction {
-    display: inline;
+    display: block;
+    float: left;
     border: thin solid yellow;
     width: 100px;
     font-size: 30px;
@@ -95,4 +96,8 @@ p.small {
 
 #counter {
     text-align: center;
+}
+
+.scoreboard {
+    clear: both;
 }

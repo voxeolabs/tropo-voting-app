@@ -17,7 +17,7 @@
         <p class="blue">Current rankings:</p>
         <ul id="results">
             $for i, d in enumerate(songs_dict):
-            <li id="position-${d['position']}" keyword="${d['keyword']}">
+            <li class="scoreboard" id="position-${d['position']}" keyword="${d['keyword']}">
             ${d['title']} (${d['votes']} votes) <span class="instructions">${"to vote" if i==0 else ""} say '${d['keyword']}' or press ${d['number']}</span>
             </li>
         </ul>
