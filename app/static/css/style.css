@@ -81,6 +81,10 @@ p.small {
     font-size: 100%;
 }
 
+p.left {
+    text-align: left;
+}
+
 .instructions {
     color: gray;
 }
