@@ -92,12 +92,14 @@ p.left {
 }
 
 .instructions {
-	font-size: 110%;
+	font-size: 90%;
 	font-weight: normal;
-	font-style: italic;
-	border-style: solid 1px white;
+	font-padding: 4px;
+	border-style: dotted;
+	border-width: 1px;
+	border-color: white;
 	background-color: orange;
-    color: black;
+    color: white;
 }
 
 .direction {
