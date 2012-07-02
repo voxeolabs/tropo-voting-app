@@ -55,11 +55,14 @@ function updater() {
             window.previous_data = results_json;
         },
         complete: function() {
-            setTimeout(updater, 750);
+            setTimeout(updater, 1250);
         }
     })
 };
 
 $(document).ready(function() {
     updater();
+    $("#counter").flipCounter({
+        imagePath : "/static/js/flipCounter-medium.png"
+    });
 });
