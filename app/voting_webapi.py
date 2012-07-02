@@ -56,10 +56,10 @@ class MenuWebapiController(BaseWebapiController):
             return "/%s/%s" % (self.url_root(), "confirm")
 
     def confirm_choices(self):
-        return Choices("yes (1, yes), no (2, no)")
+        return Choices("yes (1), no (2)", mode="dtmf")
 
     def confirm_prompt(self):
-        return "Say yes or press 1 for yes. Say no or press 2 for no."
+        return "Press 1 for yes. Press 2 for no."
 
     def response_url(self):
         return "/%s/%s" % (self.url_root(), "response")
@@ -98,10 +98,10 @@ class VoteWebapiController(MenuWebapiController):
         choices = []
         for title, keyword, number, votes_cache in models.songs.songs_array():
             choices.append("%s(%s,%s)" % (number, keyword, number))
-            prompts.append("For %(title)s, say %(keyword)s or press %(number)s." % locals())
+            prompts.append("For %(title)s, press %(number)s." % locals())
         prompt = " ".join(prompts)
 
-        t.ask(Choices(",".join(choices)), say=prompt)
+        t.ask(Choices(",".join(choices)), mode="dtmf", say=prompt)
         t.on(event="continue", next=self.response_url())
         return t.RenderJson()
 
