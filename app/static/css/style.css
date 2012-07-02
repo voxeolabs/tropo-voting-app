@@ -88,7 +88,7 @@ p.small {
 .direction {
     display: block;
     float: left;
-    width: 60px;
+    width: 40px;
     font-size: 200%;
     font-weight: bold;
     color: blue;
