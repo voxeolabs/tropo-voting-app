@@ -61,7 +61,7 @@ function updater() {
             }
         },
         complete: function() {
-           //setTimeout(updater, 750);
+           setTimeout(updater, 750);
         }
     })
 };
