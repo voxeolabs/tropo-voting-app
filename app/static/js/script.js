@@ -56,7 +56,10 @@ function updater() {
             });
             window.previous_data = results_json;
 
-            $("#counter").flipCounter("setNumber", total_votes);
+            if (total_votes > window.previous_total) {
+                $("#counter").flipCounter("setNumber", total_votes);
+                window.previous_total = total_votes
+            }
         },
         complete: function() {
             setTimeout(updater, 1250);
@@ -65,6 +68,7 @@ function updater() {
 };
 
 $(document).ready(function() {
+    window.previous_total = 0;
     updater();
     $("#counter").flipCounter({
         imagePath : "/static/js/flipCounter-medium.png"
