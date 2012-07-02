@@ -86,7 +86,7 @@ p.small {
 }
 
 .direction {
-    display: block;
+    display: inline;
     border: thin solid yellow;
     width: 100px;
     font-size: 30px;
