@@ -48,7 +48,7 @@ function updater() {
                 }
 
                 var instructions = "Press " + item["number"];
-                $(position_id).html('<span class="direction">' + direction + "</span> " + item['title'] + " (" + item["votes"] + " votes) " + '<span class="instructions">' + instructions +  '</span>');
+                $(position_id).html('<span class="instructions">' + instructions +  '</span>' + '<span class="direction">' + direction + "</span> " + item['title'] + " (" + item["votes"] + " votes) ");
                 $(position_id).attr("keyword", item["keyword"]);
 
                 total_votes = total_votes + item["votes"]
