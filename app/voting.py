@@ -33,12 +33,12 @@ urls = (
 ### @export "index"
 class Index(object):
     def GET(self):
-        return render.index(VOTING_HOTLINE, models.songs.songs_dict('votes_cache'))
+        return render.index(VOTING_HOTLINE, models.songs.songs_dict(order='votes_cache'))
 
 ### @export "results-json"
 class ResultsJsonController(object):
     def GET(self):
-        return json.dumps(models.songs.songs_dict('votes_cache'))
+        return json.dumps(models.songs.songs_dict(order='votes_cache'))
 
 ### @export "votes"
 class Votes(object):
