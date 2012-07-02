@@ -75,6 +75,10 @@ p.big {
     font-size: 150%;
 }
 
+p.huge {
+    font-size: 200%;
+}
+
 p.small {
     margin-left: 0px;
     margin-right: 0px;
