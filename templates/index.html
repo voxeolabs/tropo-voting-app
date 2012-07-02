@@ -6,10 +6,9 @@
         <meta http-equiv="Content-type" content="text/html" />
         <title>Play My Song</title>
         <link href="/static/css/style.css" type="text/css" rel="stylesheet" />
-        <script type="text/javascript" src="/static/js/jquery-1.7.2.min.js">
-        </script>
-        <script type="text/javascript" src="/static/js/script.js">
-        </script>
+        <script type="text/javascript" src="/static/js/jquery-1.7.2.min.js"></script>
+        <script type="text/javascript" src="/static/js/script.js"></script>
+        <script type="text/javascript" src="/static/js/jquery.flipCounter.1.2.pack.js"></script>
     </head>
     <body>
         <p class="blue big">Hey, Diggz, play my song!</p>
@@ -17,13 +16,14 @@
         <p class="blue">Current rankings:</p>
         <ul id="results">
             $for i, d in enumerate(songs_dict):
-              <li id="position-${d['position']}" keyword="${d['keyword']}">
-                  ${d['title']} (${d['votes']} votes) <span class="instructions">${"to vote" if i==0 else ""} say '${d['keyword']}' or press ${d['number']}</span>
-              </li>
-          </ul>
-        <div style="padding-top: 100px;">
-            <p class="small">Voting Powered By</p>
-            <p class="small"><img width="300px" alt="tropo logo" src="/static/images/tropo-white.png" /></p>
-        </div>
+            <li id="position-${d['position']}" keyword="${d['keyword']}">
+            ${d['title']} (${d['votes']} votes) <span class="instructions">${"to vote" if i==0 else ""} say '${d['keyword']}' or press ${d['number']}</span>
+            </li>
+        </ul>
+        <div id="counter"><input type="hidden" name="counter-value" value="100" /></div>
+<div style="padding-top: 100px;">
+    <p class="small">Voting Powered By</p>
+    <p class="small"><img width="300px" alt="tropo logo" src="/static/images/tropo-white.png" /></p>
+</div>
     </body>
 </html>
