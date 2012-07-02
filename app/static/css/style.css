@@ -92,6 +92,8 @@ p.left {
 }
 
 .instructions {
+	font-size: 110%;
+	font-weight: normal;
     color: white;
 }
 
