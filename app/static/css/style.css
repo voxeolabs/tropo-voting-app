@@ -84,16 +84,9 @@ p.small {
     color: gray;
 }
 
-.up {
-    background-color: green;
-}
-
-.down {
-    background-color: red;
-}
-
-.unchanged {
-    border: thin solid white;
+.direction {
+    font-size: 20px;
+    font-weight: bold;
 }
 
 #counter {
