@@ -43,16 +43,16 @@ function updater() {
                 $(position_id).attr("keyword", item["keyword"]);
 
                 console.log("Previous vote count for " + item["title"] + " was " + window.previous_data[i]["votes"]);
-                console.log("Current count for " + item["title"] + " is " + results_json["votes"]);
+                console.log("Current count for " + item["title"] + " is " + item["votes"]);
 
                 var direction;
                 if (position > previous_position) {
                     direction = "down";
                 } else if (position < previous_position) {
                     direction = "up";
-                } else if (window.previous_data[i]["votes"] > results_json["votes"]) {
+                } else if (window.previous_data[i]["votes"] > item["votes"]) {
                     direction = "unchanged"
-                } else if (window.previous_data[i]["votes"] == results_json["votes"]) {
+                } else if (window.previous_data[i]["votes"] == item["votes"]) {
                     direction = "none";
                 } else {
                     throw "stop";
