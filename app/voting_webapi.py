@@ -97,11 +97,11 @@ class VoteWebapiController(MenuWebapiController):
         prompts = []
         choices = []
         for title, keyword, number, votes_cache in models.songs.songs_array():
-            choices.append("%s(%s,%s)" % (number, keyword, number))
+            choices.append("%s(%s)" % (number, number))
             prompts.append("For %(title)s, press %(number)s." % locals())
         prompt = " ".join(prompts)
 
-        t.ask(Choices(",".join(choices)), mode="dtmf", say=prompt)
+        t.ask(Choices(",".join(choices), mode="dtmf"), say=prompt)
         t.on(event="continue", next=self.response_url())
         return t.RenderJson()
 
