@@ -47,7 +47,7 @@ function updater() {
                 } else if (window.previous_data[i]["votes"] < item["votes"]) {
                     direction = "&rarr;"
                 } else if (window.previous_data[i]["votes"] == item["votes"]) {
-                    direction = "&bull;";
+                    direction = "--";
                 } else {
                     throw "stop";
                 }
