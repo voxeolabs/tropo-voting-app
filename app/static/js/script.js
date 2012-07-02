@@ -38,27 +38,24 @@ function updater() {
                 if (position == 0) {
                     instructions = "to vote ";
                 }
-                instructions = instructions += "say '" + item["keyword"] + "' or press " + item["number"];
-                $(position_id).html(item['title'] + " (" + item["votes"] + " votes) " + '<span class="instructions">' + instructions +  '</span>');
-                $(position_id).attr("keyword", item["keyword"]);
-
-                console.log("Previous vote count for " + item["title"] + " was " + window.previous_data[i]["votes"]);
-                console.log("Current count for " + item["title"] + " is " + item["votes"]);
 
                 var direction;
                 if (position > previous_position) {
-                    direction = "down";
+                    direction = "&darr;";
                 } else if (position < previous_position) {
-                    direction = "up";
+                    direction = "&uarr;";
                 } else if (window.previous_data[i]["votes"] < item["votes"]) {
-                    direction = "unchanged"
+                    direction = "&rarr;"
                 } else if (window.previous_data[i]["votes"] == item["votes"]) {
-                    direction = "none";
+                    direction = "&nbsp;";
                 } else {
                     throw "stop";
                 }
 
-                $(position_id).attr("class", direction);
+                instructions = instructions += "say '" + item["keyword"] + "' or press " + item["number"];
+                $(position_id).html(direction + " " + item['title'] + " (" + item["votes"] + " votes) " + '<span class="instructions">' + instructions +  '</span>');
+                $(position_id).attr("keyword", item["keyword"]);
+
                 total_votes = total_votes + item["votes"]
             });
             window.previous_data = results_json;
@@ -69,7 +66,7 @@ function updater() {
             }
         },
         complete: function() {
-            setTimeout(updater, 1250);
+            setTimeout(updater, 750);
         }
     })
 };
