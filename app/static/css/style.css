@@ -83,6 +83,7 @@ p.small {
 
 p.left {
     text-align: left;
+    margin-left: 100px;
 }
 
 .instructions {
