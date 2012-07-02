@@ -47,7 +47,7 @@ function updater() {
                     throw "stop";
                 }
 
-                var instructions = "press " + item["number"];
+                var instructions = "Press " + item["number"];
                 $(position_id).html('<span class="direction">' + direction + "</span> " + item['title'] + " (" + item["votes"] + " votes) " + '<span class="instructions">' + instructions +  '</span>');
                 $(position_id).attr("keyword", item["keyword"]);
 
@@ -61,7 +61,7 @@ function updater() {
             }
         },
         complete: function() {
-           // setTimeout(updater, 750);
+           setTimeout(updater, 750);
         }
     })
 };
