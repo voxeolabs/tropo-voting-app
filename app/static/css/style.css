@@ -89,8 +89,9 @@ p.small {
     display: block;
     float: left;
     width: 60px;
-    font-size: 30px;
+    font-size: 150px;
     font-weight: bold;
+    color: red;
 }
 
 #counter {
