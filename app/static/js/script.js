@@ -50,7 +50,7 @@ function updater() {
                     direction = "down";
                 } else if (position < previous_position) {
                     direction = "up";
-                } else if (window.previous_data[i]["votes"] > item["votes"]) {
+                } else if (window.previous_data[i]["votes"] < item["votes"]) {
                     direction = "unchanged"
                 } else if (window.previous_data[i]["votes"] == item["votes"]) {
                     direction = "none";
