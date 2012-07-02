@@ -108,12 +108,12 @@ class VoteWebapiController(MenuWebapiController):
 ### @export "do-response"
     def do_response(self):
         song_id = self.get_answer()
-        song_title = models.songs.song_title(song_id)
 
         if not song_id:
             return self.do_bad_choice()
         else:
             t = Tropo()
+            song_title = models.songs.song_title(song_id)
             prompt = "You chose %s, is that correct? " % song_title
             choices = self.confirm_choices()
             t.ask(choices, say=prompt + self.confirm_prompt())
