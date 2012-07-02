@@ -78,6 +78,7 @@ $(document).ready(function() {
     window.previous_total = 0;
     updater();
     $("#counter").flipCounter({
-        imagePath : "/static/js/flipCounter-medium.png"
+        imagePath : "/static/js/flipCounter-medium.png",
+        easing: jQuery.easing.easeOutCubic
     });
 });
