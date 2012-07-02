@@ -42,6 +42,9 @@ function updater() {
                 $(position_id).html(item['title'] + " (" + item["votes"] + " votes) " + '<span class="instructions">' + instructions +  '</span>');
                 $(position_id).attr("keyword", item["keyword"]);
 
+                console.log("Previous vote count for " + item["title"] + " was " + window.previous_data[i]["votes"]);
+                console.log("Current count for " + item["title"] + " is " + results_json["votes"]);
+
                 var direction;
                 if (position > previous_position) {
                     direction = "down";
@@ -49,8 +52,10 @@ function updater() {
                     direction = "up";
                 } else if (window.previous_data[i]["votes"] > results_json["votes"]) {
                     direction = "unchanged"
-                } else {
+                } else if (window.previous_data[i]["votes"] == results_json["votes"]) {
                     direction = "none";
+                } else {
+                    throw "stop";
                 }
 
                 $(position_id).attr("class", direction);
