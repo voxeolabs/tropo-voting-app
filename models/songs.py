@@ -45,4 +45,5 @@ def song_title(number):
     """
     Returns the song title for a given song number.
     """
-    return db.select("songs", where="number=$number", vars=locals())[0]["title"]
+    if number:
+        return db.select("songs", where="number=$number", vars=locals())[0]["title"]
